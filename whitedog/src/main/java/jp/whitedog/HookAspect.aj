@@ -27,14 +27,14 @@ import org.aspectj.lang.reflect.CodeSignature;
  * Hooks method that has @Share annotation and invoke handler.handle().
  * @author Takao Nakaguchi
  */
-public aspect HookAspect
+public abstract aspect HookAspect
 {
 	/**
 	 * Sets the hook handler.
 	 * @param handler Hook handler
 	 */
-	public static void setHookReceiver(HookHandler handler){
-		HookAspect.handler = handler;
+	public void setHookReceiver(HookHandler handler){
+		this.handler = handler;
 	}
 
 	/**
@@ -46,7 +46,7 @@ public aspect HookAspect
 		}
 	};
 
-	private static HookHandler handler = defaultHandler;
+	private HookHandler handler = defaultHandler;
 
 	Object around() : execution(@Share * *.*(..)){
 		JoinPoint jp = thisJoinPoint;

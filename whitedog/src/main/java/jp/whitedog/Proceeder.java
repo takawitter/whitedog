@@ -16,6 +16,14 @@
  */
 package jp.whitedog;
 
+/**
+ * An object which proceeds the original implementations of hooked method.
+ * @author Takao Nakaguchi
+ */
 public interface Proceeder {
+	/**
+	 * Proceeds original implementations.
+	 * @return object returned to caller
+	 */
 	Object proceed();
 }
