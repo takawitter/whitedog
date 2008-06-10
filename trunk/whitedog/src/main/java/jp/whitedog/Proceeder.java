@@ -16,9 +16,6 @@
  */
 package jp.whitedog;
 
-/**
- * Indicates that a method execution should be shared in session.
- * @author Takao Nakaguchi
- */
-public @interface Share {
+public interface Proceeder {
+	Object proceed();
 }
