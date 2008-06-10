@@ -16,9 +16,8 @@
  */
 package jp.whitedog;
 
-/**
- * Indicates that a method execution should be shared in session.
- * @author Takao Nakaguchi
- */
-public @interface Share {
+import java.lang.reflect.Method;
+
+public interface HookHandler {
+	Object handle(Object target, Method method, Object[] args, Proceeder proceeder);
 }
