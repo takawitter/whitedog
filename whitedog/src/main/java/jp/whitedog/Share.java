@@ -1,4 +1,6 @@
-/* Copyright 2008 Takao Nakaguchi.
+/* $Id$
+ * 
+ * Copyright 2008 Takao Nakaguchi.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,5 +16,9 @@
  */
 package jp.whitedog;
 
+/**
+ * Indicates that a method execution should be shared in session.
+ * @author nakaguchi
+ */
 public @interface Share {
 }
