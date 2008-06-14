@@ -16,20 +16,5 @@
  */
 package jp.whitedog;
 
-import java.lang.reflect.Method;
-
-/**
- * Handles hooked event caused by hook aspects.
- * @author Takao Nakaguchi
- */
-public interface HookHandler {
-	/**
-	 * Handles hooked event.
-	 * @param target target of hooked method
-	 * @param method hooked method signature
-	 * @param args argumens passed to hooked method
-	 * @param proceeder proceeder that proceeds original implementation of hooked method
-	 * @return object to be returned to caller
-	 */
-	Object handle(Object target, Method method, Object[] args, Proceeder proceeder);
+public @interface ConnectAfterHere {
 }
