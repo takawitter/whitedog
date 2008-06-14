@@ -20,14 +20,28 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Aspect for automatic session management.
+ * This aspect does:
+ * <ul>
+ * <li>register object that has the method annotated by @Share</li>
+ * <li>connect when the execution of the method annotated by @ConnectAfterHere done</li>
+ * </ul>
+ * @author Takao Nakaguchi
+ */
 public abstract aspect AutoSessionManagementAspect{
 	public AutoSessionManagementAspect(Session session){
 		this.session = session;
 	}
 
-	after() : staticinitialization(*)
-		&& !within(jp.whitedog.*)
-		&& !within(jp.whitedog.AutoSessionManagementAspect+)
+	pointcut whitedogRelated() :
+		within(jp.whitedog.*)
+		|| within(jp.whitedog.AutoSessionManagementAspect+)
+		;
+
+	after() :
+		staticinitialization(*)
+		&& !whitedogRelated()
 	{
 		Class<?> clazz = (Class<?>)thisJoinPointStaticPart.getSignature().getDeclaringType();
 		for(Method m : clazz.getDeclaredMethods()){
@@ -41,30 +55,27 @@ public abstract aspect AutoSessionManagementAspect{
 	after(Object object) :
 		execution(*.new(..))
 		&& this(object)
-		&& !within(jp.whitedog.*)
-		&& !within(jp.whitedog.AutoSessionManagementAspect+)
+		&& !whitedogRelated()
 	{
 		if(sharedClasses.contains(object.getClass())){
 			session.register(object);
 		}
 	}
 
-	after() : execution(@ConnectAfterHere * *.*(..)){
+	after() :
+		execution(@ConnectAfterHere * *.*(..))
+		|| execution(@ConnectAfterHere *.new(..))
+	{
+		if(connected) return;
 		try{
 			session.connect();
-		} catch(WhiteDogException e){
-			e.printStackTrace();
-		}
-	}
-
-	after() : execution(@ConnectAfterHere *.new(..)){
-		try{
-			session.connect();
+			connected = true;
 		} catch(WhiteDogException e){
 			e.printStackTrace();
 		}
 	}
 
 	private Session session;
+	private boolean connected;
 	private Set<Class<?>> sharedClasses = new HashSet<Class<?>>();
 }
