@@ -27,27 +27,12 @@ import org.aspectj.lang.reflect.CodeSignature;
  * Hooks method that has @Share annotation and invoke handler.handle().
  * @author Takao Nakaguchi
  */
-public abstract aspect HookAspect
+public aspect ShareAspect
 {
 	/**
-	 * Sets the hook handler.
-	 * @param handler Hook handler
+	 * hook method execution and call hookHandler.handle()
+	 * @return object returned by hookHandler.handle()
 	 */
-	public void setHookReceiver(HookHandler handler){
-		this.handler = handler;
-	}
-
-	/**
-	 * Default hook handler. This always invoke proceeder.proceed().
-	 */
-	public static final HookHandler defaultHandler = new HookHandler(){
-		public Object handle(Object target, Method method, Object[] args, Proceeder proceeder) {
-			return proceeder.proceed();
-		}
-	};
-
-	private HookHandler handler = defaultHandler;
-
 	Object around() : execution(@Share * *.*(..)){
 		JoinPoint jp = thisJoinPoint;
 		Object target = jp.getThis();
@@ -62,10 +47,19 @@ public abstract aspect HookAspect
 			// must not be thrown
 			throw new RuntimeException(e);
 		}
-		return handler.handle(target, method, jp.getArgs(), new Proceeder(){
+		if(!(target instanceof SharedObject)){
+			return proceed();
+		}
+		SharedObject so = (SharedObject)target;
+		boolean shared = so.share(method, jp.getArgs(), new Proceeder(){
 			public Object proceed() {
 				return proceed();
 			}
 		});
+		if(!shared){
+			return proceed();
+		} else{
+			return null;
+		}
 	}
 }

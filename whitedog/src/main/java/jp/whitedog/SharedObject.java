@@ -16,13 +16,27 @@
  */
 package jp.whitedog;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Method;
 
 /**
- * Indicates that a method execution should be shared in session.
+ * The interface should be implemented by the object that has method annotated by @Share.
  * @author Takao Nakaguchi
  */
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Share {
+public interface SharedObject {
+	/**
+	 * bind Session to this object.
+	 * @param session Session to be binded
+	 * @param objectId object ID of this object in the session
+	 */
+	void bindSession(Session session, String objectId);
+
+	/**
+	 * unbined Session from this object.
+	 * @param session Session to be unbinded
+	 */
+	void unbinedSession(Session session);
+
+	String getObjectIdIn(Session session);
+
+	boolean share(Method method, Object[] arguments, Proceeder proceeder);
 }

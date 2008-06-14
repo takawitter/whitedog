@@ -16,13 +16,22 @@
  */
 package jp.whitedog;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 /**
- * Indicates that a method execution should be shared in session.
+ * Exception thrown at exceptional occasion related to whitedog library.
  * @author Takao Nakaguchi
  */
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Share {
+public class WhiteDogException extends Exception{
+	public WhiteDogException(String message){
+		super(message);
+	}
+
+	public WhiteDogException(Throwable cause){
+		super(cause);
+	}
+
+	public WhiteDogException(String message, Throwable cause){
+		super(message, cause);
+	}
+
+	private static final long serialVersionUID = 8274560428519632740L;
 }
