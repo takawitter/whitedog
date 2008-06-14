@@ -1,6 +1,6 @@
 <project name="whitedog" default="dist">
 	<target name="dist">
-		<jar basedir="target/classes" jarfile="whitedog.jar" includes="**/*.class" />
-		<move file="whitedog.jar" todir="../whitedog-libs/whitedog" />
+		<jar basedir="target/classes" jarfile="whitedog-0.9-DEVELOPMENT.jar" includes="**/*.class" />
+		<move file="whitedog-0.9-DEVELOPMENT.jar" todir="../whitedog-libs/whitedog" />
 	</target>
 </project>
