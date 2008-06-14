@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.ajdt.core.ASPECTJRT_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/whitedog-jgroups"/>
+	<classpathentry kind="lib" path="/whitedog-libs/jgroups/commons-logging.jar"/>
+	<classpathentry kind="lib" path="/whitedog-libs/jgroups/concurrent.jar"/>
+	<classpathentry kind="lib" path="/whitedog-libs/jgroups/jgroups-all.jar"/>
+	<classpathentry kind="lib" path="/whitedog-libs/whitedog/whitedog-0.9-DEVELOPMENT.jar">
+		<attributes>
+			<attribute name="org.eclipse.ajdt.aspectpath" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
