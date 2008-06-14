@@ -1,7 +1,7 @@
 #summary Building instructions using Eclipse3.3.
 #labels Phase-Implementation
 
-= Setup eclipse =
+= Setup Eclipse =
 
 WhiteDog project is using AJDT1.5.3(AspectJ1.6.1) dev build.  Install this plugin from following site.
 {{{
