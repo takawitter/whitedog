@@ -1,0 +1,12 @@
+#summary Building instructions using Eclipse3.3.
+#labels Phase-Implementation
+
+= Setup eclipse =
+
+WhiteDog project is using AJDT1.5.3(AspectJ1.6.1) dev build.  Install this plugin from following site.
+{{{
+Name: AJDT 1.5.3 dev Update Site
+URL : http://download.eclipse.org/tools/ajdt/33/update
+}}}
+
+Note: jp.whitedog.ShareAspect needs *hasmember()* type pattern. So you must turned on Has Member option (AspectJ Compiler -> Other -> Has Member).
