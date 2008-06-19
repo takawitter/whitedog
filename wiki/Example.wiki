@@ -51,3 +51,4 @@ This example uses JGroupsSession. JGroupsSession finds the session that has same
 
 Here is the screen shot.
 
+http://whitedog.googlecode.com/files/screenshot_paint.png
