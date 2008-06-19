@@ -43,7 +43,7 @@ public class Paint extends JFrame{
 }
 }}}
 These code shows how you use !WhiteDog. 
-By annotating a method with @Share annotaion, you can share the method execution in session.
+By annotating a method with @Share annotaion and register the object that is instance of the Class having the method to session, you can share the method execution in session.
 
 In this example, the mouseDragged method of anonymous inner class in the constructor of Paint. That method draws small dot on line of mouse drag. So the dots will be shared in the session. 
 
