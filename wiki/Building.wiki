@@ -1,5 +1,5 @@
 #summary Building instructions using Eclipse3.3.
-#labels Phase-Implementation
+#labels Phase-Implementation,Featured
 
 = Setup Eclipse =
 
