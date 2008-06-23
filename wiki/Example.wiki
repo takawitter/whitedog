@@ -8,7 +8,7 @@ Here are example code copied from jp.whitedog.sample.paint.Paint.
 public class Paint extends JFrame{
 	public Paint(){
 		final JPanel panel = new JPanel();
-		MouseMotionListener l = new MouseMotionAdapter(){
+		MouseMotionListener listener = new MouseMotionAdapter(){
 			@Share
 			public void mouseDragged(MouseEvent e) {
 				Graphics g = panel.getGraphics();
@@ -16,12 +16,12 @@ public class Paint extends JFrame{
 				g.dispose();
 			}
 		};
-		panel.addMouseMotionListener(l);
+		panel.addMouseMotionListener(listener);
 		add(panel);
 
 		// create session, register shared object and connect.
 		Session session = new JGroupsSession("hello");
-		session.register(l);
+		session.register(listener);
 		try{
 			session.connect();
 		} catch(WhiteDogException e){
@@ -42,8 +42,8 @@ public class Paint extends JFrame{
 	}
 }
 }}}
-These code shows how you use !WhiteDog. 
-By annotating a method with @Share annotaion and register the object that is instance of the Class having the method to session, you can share the method execution in session.
+These code shows how you can use !WhiteDog framework.
+By annotating a method with @Share annotaion and register the object that has the method to the session, you can share the execution of the annotated method in the session.
 
 In this example, the mouseDragged method of anonymous inner class in the constructor of Paint. That method draws small dot on line of mouse drag. So the dots will be shared in the session. 
 
