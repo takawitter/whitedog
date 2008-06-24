@@ -14,29 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.whitedog;
+package jp.whitedog.util;
 
-import java.lang.reflect.Method;
+import java.util.Random;
 
 /**
- * The interface should be implemented by the object that has method annotated by @Share.
+ * Utilities related to String.
  * @author Takao Nakaguchi
  */
-public interface SharedObject {
+public class StringUtil {
 	/**
-	 * bind Session to this object.
-	 * @param session Session to be binded
-	 * @param objectId object ID of this object in the session
+	 * generate string consists of random characters.
+	 * @param length length of generated string
+	 * @return string
 	 */
-	void bindToSession(Session session, String objectId);
+	public static String randomString(int length){
+		StringBuilder b = new StringBuilder();
+		for(int i = 0; i < length; i++){
+			b.append(base.charAt(random.nextInt(base.length())));
+		}
+		return b.toString();
+	}
 
-	/**
-	 * unbined Session from this object.
-	 * @param session Session to be unbinded
-	 */
-	void unbinedFromSession();
-
-	String getObjectId();
-
-	Object share(Method method, Object[] arguments, Proceeder proceeder);
+	private static String base = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabsdefghijklmnopqrstuvwxyz";
+	private static Random random = new Random();
 }

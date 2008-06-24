@@ -16,27 +16,28 @@
  */
 package jp.whitedog;
 
-import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * The interface should be implemented by the object that has method annotated by @Share.
+ * PeerList used for share peer added/removed event.
  * @author Takao Nakaguchi
  */
-public interface SharedObject {
-	/**
-	 * bind Session to this object.
-	 * @param session Session to be binded
-	 * @param objectId object ID of this object in the session
-	 */
-	void bindToSession(Session session, String objectId);
+public class PeerList {
+	@Share
+	public void addPeer(Peer peer){
+		peers.add(peer);
+		peerAdded(peer);
+	}
 
-	/**
-	 * unbined Session from this object.
-	 * @param session Session to be unbinded
-	 */
-	void unbinedFromSession();
+	@Share
+	public void removePeer(Peer peer){
+		peerRemoved(peer);
+		peers.remove(peer);
+	}
 
-	String getObjectId();
+	protected void peerAdded(Peer peer){}
+	protected void peerRemoved(Peer peer){}
 
-	Object share(Method method, Object[] arguments, Proceeder proceeder);
+	private Set<Peer> peers = new HashSet<Peer>();
 }

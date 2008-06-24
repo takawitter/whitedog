@@ -16,16 +16,24 @@
  */
 package jp.whitedog.jgroups;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import jp.whitedog.MethodExecution;
+import jp.whitedog.Peer;
 import jp.whitedog.Session;
 import jp.whitedog.WhiteDogException;
 
+import org.jgroups.Address;
 import org.jgroups.ChannelClosedException;
 import org.jgroups.ChannelException;
 import org.jgroups.ChannelNotConnectedException;
 import org.jgroups.JChannel;
 import org.jgroups.Message;
 import org.jgroups.ReceiverAdapter;
+import org.jgroups.View;
 
 /**
  * Session implementation using JGroups.
@@ -40,7 +48,88 @@ public class JGroupsSession extends Session {
 		super(sessionId);
 	}
 
-	public void doShare(MethodExecution execution)
+	protected void doConnect()
+	throws WhiteDogException
+	{
+		if(channel != null) return;
+		try {
+			channel = new JChannel();
+			channel.setReceiver(new ReceiverAdapter(){
+				@Override
+				public void receive(Message msg) {
+					Object o = msg.getObject();
+					if(o instanceof MethodExecution){
+						dispatch((MethodExecution)o);
+					} else if(o instanceof PeerIntroduction){
+						PeerIntroduction intro = (PeerIntroduction)o;
+						Address a = msg.getSrc();
+						Peer p = new Peer(intro.getPeerId());
+						addressToPeer.put(a, p);
+						peerToAddress.put(p, a);
+						peerEntered(p);
+						if(!p.getPeerId().equals(getSelfPeer().getPeerId())){
+							try{
+								channel.send(new Message(
+										a, null
+										, new PeerIntroductionResponse(getSelfPeer().getPeerId())
+										));
+							} catch(ChannelNotConnectedException e){
+								e.printStackTrace();
+							} catch(ChannelClosedException e){
+								e.printStackTrace();
+							}
+						}
+						/*
+						 * displayNameどう共有するか。
+						 * JGroupsのブロードキャストで交換するか、WhiteDogに
+						 * 状態の共有メカニズム作るか。
+						 */
+					} else if(o instanceof PeerIntroductionResponse){
+						PeerIntroductionResponse res = (PeerIntroductionResponse)o;
+						Address a = msg.getSrc();
+						Peer p = new Peer(res.getPeerId());
+						addressToPeer.put(a, p);
+						peerToAddress.put(p, a);
+						peerEntered(p);
+					}
+					super.receive(msg);
+				}
+				@Override
+				public void viewAccepted(View new_view) {
+					Set<Address> removed = new HashSet<Address>(members);
+					for(Object a : new_view.getMembers()){
+						Address address = (Address)a;
+						members.add(address);
+						removed.remove(address);
+					}
+					for(Address a : removed){
+						// process peer remove
+						members.remove(a);
+						Peer p = addressToPeer.get(a);
+						if(p != null){
+							peerLeaved(p);
+							addressToPeer.remove(a);
+							peerToAddress.remove(p);
+						}
+					}
+					super.viewAccepted(new_view);
+				}
+			});
+			channel.connect(getSessionId());
+			channel.send(new Message(
+					null, null, new PeerIntroduction(getSelfPeer().getPeerId())
+					));
+		} catch(ChannelException e) {
+			throw new WhiteDogException(e);
+		}
+	}
+
+	protected void doDisconnect() throws WhiteDogException{
+		channel.disconnect();
+		channel = null;
+	}
+
+	protected void doShare(MethodExecution execution)
 	throws WhiteDogException
 	{
 		if(channel == null){
@@ -55,29 +144,9 @@ public class JGroupsSession extends Session {
 		}
 	}
 
-	public void connect()
-	throws WhiteDogException
-	{
-		if(channel != null) return;
-		try {
-			channel = new JChannel();
-			channel.setReceiver(new ReceiverAdapter(){
-				public void receive(Message arg0) {
-					dispatch((MethodExecution)arg0.getObject());
-				}
-			});
-			channel.connect(getId());
-		} catch(ChannelException e) {
-			throw new WhiteDogException(e);
-		}
-	}
-
-	public void disconnect() throws WhiteDogException{
-		channel.disconnect();
-		channel = null;
-	}
-
 	private JChannel channel;
-
+	private Set<Address> members = new HashSet<Address>();
+	private Map<Address, Peer> addressToPeer = new HashMap<Address, Peer>();
+	private Map<Peer, Address> peerToAddress = new HashMap<Peer, Address>();
 	private static final long serialVersionUID = -3548894109396142431L;
 }

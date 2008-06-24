@@ -25,33 +25,36 @@ import java.util.Set;
 public aspect SharedObjectImplAspect {
 	declare parents: hasmethod(@Share * *(..))  implements SharedObject;
 
-public void SharedObject.bindSession(Session session, String objectId){
-		sessionIdToObjectIdMap.put(session.getId(), objectId);
-		sessions.add(session);
-	}
-
-	public void SharedObject.unbinedSession(Session session){
-		sessionIdToObjectIdMap.remove(session.getId());
-		sessions.remove(session);
-	}
-
-	public String SharedObject.getObjectIdIn(Session session){
-		return sessionIdToObjectIdMap.get(session.getId());
-	}
-
-	public boolean SharedObject.share(Method method, Object[] args, Proceeder proceeder){
-		boolean shared = false;
-		for(Session session : sessions){
-			shared = true;
-			try{
-				session.share(this, method, args, proceeder);
-			} catch(WhiteDogException e) {
-				e.printStackTrace();
-			}
+	public void SharedObject.bindToSession(Session session, String objectId){
+		if(this.session != null){
+			throw new IllegalStateException("object already binded to "
+					+ session.getSessionId() + ":" + this.objectId);
 		}
-		return shared;
+		this.session = session;
+		this.objectId = objectId;
 	}
 
-	private Map<String, String> SharedObject.sessionIdToObjectIdMap = new HashMap<String, String>();
-	private Set<Session> SharedObject.sessions = new HashSet<Session>();
+	public void SharedObject.unbinedFromSession(){
+		this.session = null;
+		this.objectId = null;
+	}
+
+	public String SharedObject.getObjectId(){
+		return objectId;
+	}
+
+	public Object SharedObject.share(Method method, Object[] args, Proceeder proceeder){
+		if(session == null){
+			return proceeder.proceed();
+		}
+		try{
+			return session.share(this, method, args, proceeder);
+		} catch(WhiteDogException e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	private Session SharedObject.session;
+	private String SharedObject.objectId;
 }
