@@ -1,0 +1,10 @@
+
+
+Session
+	peerList
+	peer add event
+	peer removed event
+
+JGroupsSession
+	address add event
+	address removed event

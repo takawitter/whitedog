@@ -1,4 +1,4 @@
-<project name="whitedog" default="dist">
+<project name="whitedog-jgroups" default="dist">
 	<property name="jarbasename" value="${ant.project.name}" />
 	<property name="version" value="0.9-DEVELOPMENT" />
 	<property name="jarfile" value="${jarbasename}-${version}.jar" />

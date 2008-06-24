@@ -20,9 +20,13 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.logging.Logger;
 
-import jp.whitedog.Proceeder;
+import jp.whitedog.util.StringUtil;
 
 /**
  * Abstract class for the class that implements network session management.
@@ -44,8 +48,32 @@ implements Serializable
 	 * returns ID of this session.
 	 * @return ID of this session
 	 */
-	public String getId(){
+	public String getSessionId(){
 		return sessionId;
+	}
+
+	/**
+	 * returns self Peer.
+	 * @return Peer
+	 */
+	public Peer getSelfPeer(){
+		return selfPeer;
+	}
+
+	/**
+	 * add Peer event listener.
+	 * @param listener Peer event listener to be added
+	 */
+	public void addPeerListener(PeerListener listener){
+		peerListeners.add(listener);
+	}
+
+	/**
+	 * remove Peer event listener.
+	 * @param listener Peer event listener to be removed
+	 */
+	public void removePeerListener(PeerListener listener){
+		peerListeners.remove(listener);
 	}
 
 	/**
@@ -53,12 +81,21 @@ implements Serializable
 	 * @param object object to share its method execution
 	 */
 	public void register(Object object){
-		SharedObject so = (SharedObject)object;
-		String objectId = getId() + "#" + object.getClass().getName() + "#" + count;
+		String objectId = object.getClass().getName() + "#" + count;
+		register(object, objectId);
 		count++;
+	}
+
+	/**
+	 * register shared object.
+	 * @param object object to share its method execution
+	 * @param objectId id to object
+	 */
+	public void register(Object object, String objectId){
+		SharedObject so = (SharedObject)object;
 		idToObject.put(objectId, object);
-		so.bindSession(Session.this, objectId);
-		System.out.println("object registered: " + objectId);
+		so.bindToSession(Session.this, objectId);
+		logger.info("object registered: " + objectId);
 	}
 
 	/**
@@ -67,9 +104,19 @@ implements Serializable
 	 */
 	public void unregister(Object object){
 		SharedObject so = (SharedObject)object;
-		String objectId = so.getObjectIdIn(Session.this);
+		String objectId = so.getObjectId();
 		idToObject.remove(objectId);
-		so.unbinedSession(Session.this);
+		so.unbinedFromSession();
+	}
+
+	public void connect()
+	throws WhiteDogException{
+		doConnect();
+	}
+
+	public void disconnect()
+	throws WhiteDogException{
+		doDisconnect();
 	}
 
 	/**
@@ -80,23 +127,23 @@ implements Serializable
 	 * @param proceeder proceeder of this execution
 	 * @throws WhiteDogException
 	 */
-	public void share(
+	public Object share(
 			SharedObject object, Method method, Object[] args
 			, Proceeder proceeder)
 	throws WhiteDogException
 	{
 		if(receiving.get()){
-			proceeder.proceed();
-			return;
+			return proceeder.proceed();
 		}
-		String id = object.getObjectIdIn(this);
+		String id = object.getObjectId();
 		doShare(new MethodExecution(id, method, args));
+		return null;
 	}
 
 	public void dispatch(MethodExecution execution){
 		Object object = idToObject.get(execution.getObjectId());
 		if(object == null){
-			System.out.println("no object found: " + execution.getObjectId());
+			logger.warning("no object found: " + execution.getObjectId());
 			return;
 		}
 		receiving.set(true);
@@ -113,16 +160,44 @@ implements Serializable
 		}
 	}
 
-	public abstract void connect()
+	protected abstract void doConnect()
 	throws WhiteDogException;
 
-	public abstract void disconnect()
+	protected abstract void doDisconnect()
 	throws WhiteDogException;
 
-	public abstract void doShare(MethodExecution execution)
+	protected abstract void doShare(MethodExecution execution)
 	throws WhiteDogException;
+
+	protected void peerEntered(Peer peer){
+		register(peer, peer.getPeerId());
+		peers.add(peer);
+		firePeerEntered(peer);
+	}
+
+	protected void peerLeaved(Peer peer){
+		firePeerLeaved(peer);
+		peers.remove(peer);
+		unregister(peer);
+	}
+
+	private void firePeerEntered(Peer peer){
+		for(PeerListener l : peerListeners){
+			l.peerEntered(peer);
+		}
+	}
+
+	private void firePeerLeaved(Peer peer){
+		for(PeerListener l : peerListeners){
+			l.peerLeaved(peer);
+		}
+	}
 
 	private String sessionId;
+	private Peer selfPeer = new Peer(StringUtil.randomString(16));
+	private Set<Peer> peers = new LinkedHashSet<Peer>();
+	private Set<PeerListener> peerListeners = new LinkedHashSet<PeerListener>();
+
 	private transient Map<String, Object> idToObject = new HashMap<String, Object>();
 	private transient int count;
 	private transient ThreadLocal<Boolean> receiving = new ThreadLocal<Boolean>(){
@@ -130,4 +205,6 @@ implements Serializable
 			return Boolean.FALSE;
 		}
 	};
+	private static Logger logger = Logger.getLogger(
+			Session.class.getPackage().getName());
 }

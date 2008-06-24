@@ -35,31 +35,28 @@ public aspect ShareAspect
 	 */
 	Object around() : execution(@Share * *.*(..)){
 		JoinPoint jp = thisJoinPoint;
-		Object target = jp.getThis();
 
-		CodeSignature sig = (CodeSignature)jp.getSignature();
+		Object target = jp.getThis();
+		if(!(target instanceof SharedObject)){
+			return proceed();
+		}
+		SharedObject so = (SharedObject)target;
+
 		Method method = null;
 		try{
-			method = target.getClass().getMethod(
+			CodeSignature sig = (CodeSignature)jp.getSignature();
+			method = so.getClass().getMethod(
 					sig.getName(), sig.getParameterTypes()
 					);
 		} catch(NoSuchMethodException e){
 			// must not be thrown
 			throw new RuntimeException(e);
 		}
-		if(!(target instanceof SharedObject)){
-			return proceed();
-		}
-		SharedObject so = (SharedObject)target;
-		boolean shared = so.share(method, jp.getArgs(), new Proceeder(){
+
+		return so.share(method, jp.getArgs(), new Proceeder(){
 			public Object proceed() {
 				return proceed();
 			}
 		});
-		if(!shared){
-			return proceed();
-		} else{
-			return null;
-		}
 	}
 }

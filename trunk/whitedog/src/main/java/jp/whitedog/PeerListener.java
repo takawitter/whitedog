@@ -16,27 +16,20 @@
  */
 package jp.whitedog;
 
-import java.lang.reflect.Method;
-
 /**
- * The interface should be implemented by the object that has method annotated by @Share.
+ * object that receives Peer event.
  * @author Takao Nakaguchi
  */
-public interface SharedObject {
+public interface PeerListener {
 	/**
-	 * bind Session to this object.
-	 * @param session Session to be binded
-	 * @param objectId object ID of this object in the session
+	 * Peer event that indicates new Peer added to session.
+	 * @param peer Peer
 	 */
-	void bindToSession(Session session, String objectId);
+	void peerEntered(Peer peer);
 
 	/**
-	 * unbined Session from this object.
-	 * @param session Session to be unbinded
+	 * Peer event that indicates existing Peer leaved from session.
+	 * @param peer Peer
 	 */
-	void unbinedFromSession();
-
-	String getObjectId();
-
-	Object share(Method method, Object[] arguments, Proceeder proceeder);
+	void peerLeaved(Peer peer);
 }
