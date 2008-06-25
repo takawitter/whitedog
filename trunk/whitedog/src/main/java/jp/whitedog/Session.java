@@ -19,8 +19,10 @@ package jp.whitedog;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -138,6 +140,10 @@ implements Serializable
 	public void disconnect()
 	throws WhiteDogException{
 		doDisconnect();
+	}
+
+	public List<Peer> getPeers(){
+		return new ArrayList<Peer>(peers);
 	}
 
 	/**
