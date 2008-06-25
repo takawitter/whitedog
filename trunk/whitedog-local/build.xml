@@ -1,0 +1,9 @@
+<project name="whitedog-local" default="dist">
+	<property name="jarbasename" value="${ant.project.name}" />
+	<property name="version" value="0.9-DEVELOPMENT" />
+	<property name="jarfile" value="${jarbasename}-${version}.jar" />
+	<target name="dist">
+		<jar basedir="target/classes" jarfile="${jarfile}" includes="**/*.class" />
+		<move file="${jarfile}" todir="../whitedog-libs/whitedog" />
+	</target>
+</project>

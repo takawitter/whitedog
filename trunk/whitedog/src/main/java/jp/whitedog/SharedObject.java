@@ -34,7 +34,7 @@ public interface SharedObject {
 	 * unbined Session from this object.
 	 * @param session Session to be unbinded
 	 */
-	void unbinedFromSession();
+	void unbindFromSession();
 
 	String getObjectId();
 

@@ -45,7 +45,7 @@ public class Paint extends JFrame{
 			public void run() {
 				Paint p = new Paint();
 				p.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				p.setSize(600, 400);
+				p.setSize(300, 200);
 				p.setTitle("shared paint");
 				p.setVisible(true);
 			}
@@ -61,7 +61,7 @@ public class Paint extends JFrame{
 			@Share
 			public void mouseDragged(MouseEvent e) {
 				Graphics g = panel.getGraphics();
-				g.fillOval(e.getX(), e.getY(), 3, 3);
+				g.fillOval(e.getX(), e.getY(), 6, 6);
 				g.dispose();
 			}
 		};

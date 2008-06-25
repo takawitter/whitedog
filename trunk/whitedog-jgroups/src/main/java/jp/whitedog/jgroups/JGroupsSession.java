@@ -23,6 +23,7 @@ import java.util.Set;
 
 import jp.whitedog.MethodExecution;
 import jp.whitedog.Peer;
+import jp.whitedog.PeerFactory;
 import jp.whitedog.Session;
 import jp.whitedog.WhiteDogException;
 
@@ -43,6 +44,15 @@ public class JGroupsSession extends Session {
 	/**
 	 * Constructor.
 	 * @param sessionId session ID
+	 * @param peerFactory Peer factory
+	 */
+	public JGroupsSession(String sessionId, PeerFactory peerFactory){
+		super(sessionId, peerFactory);
+	}
+
+	/**
+	 * Constructor.
+	 * @param sessionId session ID
 	 */
 	public JGroupsSession(String sessionId){
 		super(sessionId);
@@ -57,61 +67,20 @@ public class JGroupsSession extends Session {
 			channel.setReceiver(new ReceiverAdapter(){
 				@Override
 				public void receive(Message msg) {
+					Address src = msg.getSrc();
 					Object o = msg.getObject();
 					if(o instanceof MethodExecution){
-						dispatch((MethodExecution)o);
+						handleMethodExecution(src, (MethodExecution)o);
 					} else if(o instanceof PeerIntroduction){
-						PeerIntroduction intro = (PeerIntroduction)o;
-						Address a = msg.getSrc();
-						Peer p = new Peer(intro.getPeerId());
-						addressToPeer.put(a, p);
-						peerToAddress.put(p, a);
-						peerEntered(p);
-						if(!p.getPeerId().equals(getSelfPeer().getPeerId())){
-							try{
-								channel.send(new Message(
-										a, null
-										, new PeerIntroductionResponse(getSelfPeer().getPeerId())
-										));
-							} catch(ChannelNotConnectedException e){
-								e.printStackTrace();
-							} catch(ChannelClosedException e){
-								e.printStackTrace();
-							}
-						}
-						/*
-						 * displayNameどう共有するか。
-						 * JGroupsのブロードキャストで交換するか、WhiteDogに
-						 * 状態の共有メカニズム作るか。
-						 */
+						handlePeerIntroduction(src, (PeerIntroduction)o);
 					} else if(o instanceof PeerIntroductionResponse){
-						PeerIntroductionResponse res = (PeerIntroductionResponse)o;
-						Address a = msg.getSrc();
-						Peer p = new Peer(res.getPeerId());
-						addressToPeer.put(a, p);
-						peerToAddress.put(p, a);
-						peerEntered(p);
+						handlePeerIntroductionResponse(src, (PeerIntroductionResponse)o);
 					}
 					super.receive(msg);
 				}
 				@Override
 				public void viewAccepted(View new_view) {
-					Set<Address> removed = new HashSet<Address>(members);
-					for(Object a : new_view.getMembers()){
-						Address address = (Address)a;
-						members.add(address);
-						removed.remove(address);
-					}
-					for(Address a : removed){
-						// process peer remove
-						members.remove(a);
-						Peer p = addressToPeer.get(a);
-						if(p != null){
-							peerLeaved(p);
-							addressToPeer.remove(a);
-							peerToAddress.remove(p);
-						}
-					}
+					handleViewAccepted(new_view);
 					super.viewAccepted(new_view);
 				}
 			});
@@ -141,6 +110,65 @@ public class JGroupsSession extends Session {
 			throw new WhiteDogException(e);
 		} catch(ChannelNotConnectedException e){
 			throw new WhiteDogException(e);
+		}
+	}
+
+	private void handleMethodExecution(Address source, MethodExecution execution){
+		Peer sender = addressToPeer.get(source);
+		if(sender == null){
+			throw new RuntimeException("peer is null");
+		}
+		dispatch(sender, execution);
+	}
+
+	private void handlePeerIntroduction(Address source, PeerIntroduction intro){
+		Peer p = null;
+		if(intro.getPeerId().equals(getSelfPeer().getPeerId())){
+			p = getSelfPeer();
+		} else{
+			p = newPeer(intro.getPeerId());
+		}
+		addressToPeer.put(source, p);
+		peerToAddress.put(p, source);
+		peerEntered(p);
+		if(!p.getPeerId().equals(getSelfPeer().getPeerId())){
+			try{
+				channel.send(new Message(
+						source, null
+						, new PeerIntroductionResponse(getSelfPeer().getPeerId())
+						));
+			} catch(ChannelNotConnectedException e){
+				e.printStackTrace();
+			} catch(ChannelClosedException e){
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void handlePeerIntroductionResponse(
+			Address src, PeerIntroductionResponse response){
+		Peer p = newPeer(response.getPeerId());
+		addressToPeer.put(src, p);
+		peerToAddress.put(p, src);
+		peerEntered(p);
+	}
+
+	private void handleViewAccepted(View new_view){
+		Set<Address> removed = new HashSet<Address>(members);
+		for(Object a : new_view.getMembers()){
+			Address address = (Address)a;
+			members.add(address);
+			removed.remove(address);
+		}
+		for(Address a : removed){
+			// process peer remove
+			members.remove(a);
+			Peer p = addressToPeer.get(a);
+			if(p != null){
+				peerLeaved(p);
+				addressToPeer.remove(a);
+				peerToAddress.remove(p);
+			}
 		}
 	}
 

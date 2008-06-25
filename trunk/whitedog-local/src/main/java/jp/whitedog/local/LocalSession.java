@@ -33,30 +33,30 @@ public class LocalSession extends Session {
 		super(sessionId);
 	}
 
-	public void doShare(MethodExecution execution)
-	throws WhiteDogException
-	{
-		if(channel == null){
-			channel = new LocalChannel(getId());
-		}
-		channel.send(execution);
-	}
-
-	public void connect()
+	protected void doConnect()
 	throws WhiteDogException
 	{
 		if(channel != null) return;
-		channel = new LocalChannel(getId());
+		channel = new LocalChannel(getSessionId());
 		channel.setReceiver(new ExecutionReceiver(){
 			public void receive(MethodExecution e) {
-				dispatch(e);
+				dispatch(null, e);
 			}
 		});
 	}
 
-	public void disconnect() throws WhiteDogException{
+	protected void doDisconnect() throws WhiteDogException{
 		channel.close();
 		channel = null;
+	}
+
+	protected void doShare(MethodExecution execution)
+	throws WhiteDogException
+	{
+		if(channel == null){
+			channel = new LocalChannel(getSessionId());
+		}
+		channel.send(execution);
 	}
 
 	private LocalChannel channel;
