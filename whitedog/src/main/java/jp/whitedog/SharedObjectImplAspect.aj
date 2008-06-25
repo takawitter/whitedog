@@ -17,12 +17,14 @@
 package jp.whitedog;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
+/**
+ * An aspect for adding SharedObject implementation to shared object (that
+ * has the method annotated by @Share). 
+ * @author Takao Nakaguchi
+ */
 public aspect SharedObjectImplAspect {
+	
 	declare parents: hasmethod(@Share * *(..))  implements SharedObject;
 
 	public void SharedObject.bindToSession(Session session, String objectId){
@@ -34,7 +36,7 @@ public aspect SharedObjectImplAspect {
 		this.objectId = objectId;
 	}
 
-	public void SharedObject.unbinedFromSession(){
+	public void SharedObject.unbindFromSession(){
 		this.session = null;
 		this.objectId = null;
 	}

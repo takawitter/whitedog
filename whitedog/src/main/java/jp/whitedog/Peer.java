@@ -18,6 +18,13 @@ package jp.whitedog;
 
 import java.io.Serializable;
 
+/**
+ * Peer class that represents network peer.
+ * You can use your own peer implementation by extending this class
+ * and creating peer factory (implements jp.whitedog.PeerFactory)
+ * that instantiates it.
+ * @author Takao Nakaguchi
+ */
 public class Peer
 implements Serializable
 {
@@ -27,15 +34,6 @@ implements Serializable
 
 	public String getPeerId(){
 		return peerId;
-	}
-
-	public String getDisplayName(){
-		return displayName;
-	}
-
-	@Share
-	public void setDisplayName(String displayName){
-		this.displayName = displayName;
 	}
 
 	public int hashCode(){
@@ -52,6 +50,5 @@ implements Serializable
 	}
 
 	private String peerId;
-	private String displayName;
 	private static final long serialVersionUID = -665174834545988109L;
 }

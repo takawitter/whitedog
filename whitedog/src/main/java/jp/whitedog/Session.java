@@ -26,8 +26,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import jp.whitedog.util.StringUtil;
-
 /**
  * Abstract class for the class that implements network session management.
  * @author Takao Nakaguchi
@@ -38,10 +36,24 @@ implements Serializable
 	/**
 	 * Constructor.
 	 * @param sessionId session ID
-	 * @param displayName display name of this session
+	 * @param factory Peer factory
+	 */
+	public Session(String sessionId, PeerFactory factory){
+		this.sessionId = sessionId;
+		this.peerFactory = factory;
+		selfPeer = newPeer(UUID.randomUUID().toString());
+	}
+
+	/**
+	 * Constructor.
+	 * @param sessionId session ID
 	 */
 	public Session(String sessionId){
-		this.sessionId = sessionId;
+		this(sessionId, new PeerFactory(){
+			public Peer createPeer(String peerId) {
+				return new Peer(peerId);
+			}
+		});
 	}
 
 	/**
@@ -58,6 +70,15 @@ implements Serializable
 	 */
 	public Peer getSelfPeer(){
 		return selfPeer;
+	}
+
+	/**
+	 * returns the current sender peer if exists.
+	 * This method returns valid peer only in dispatching context.
+	 * @return current sender peer. null if not exists.
+	 */
+	public Peer getCurrentSender(){
+		return currentSender.get();
 	}
 
 	/**
@@ -94,7 +115,7 @@ implements Serializable
 	public void register(Object object, String objectId){
 		SharedObject so = (SharedObject)object;
 		idToObject.put(objectId, object);
-		so.bindToSession(Session.this, objectId);
+		so.bindToSession(this, objectId);
 		logger.info("object registered: " + objectId);
 	}
 
@@ -106,7 +127,7 @@ implements Serializable
 		SharedObject so = (SharedObject)object;
 		String objectId = so.getObjectId();
 		idToObject.remove(objectId);
-		so.unbinedFromSession();
+		so.unbindFromSession();
 	}
 
 	public void connect()
@@ -132,7 +153,7 @@ implements Serializable
 			, Proceeder proceeder)
 	throws WhiteDogException
 	{
-		if(receiving.get()){
+		if(dispatching.get()){
 			return proceeder.proceed();
 		}
 		String id = object.getObjectId();
@@ -140,13 +161,14 @@ implements Serializable
 		return null;
 	}
 
-	public void dispatch(MethodExecution execution){
+	public void dispatch(Peer sender, MethodExecution execution){
 		Object object = idToObject.get(execution.getObjectId());
 		if(object == null){
 			logger.warning("no object found: " + execution.getObjectId());
 			return;
 		}
-		receiving.set(true);
+		dispatching.set(true);
+		currentSender.set(sender);
 		try{
 			execution.execute(object);
 		} catch (NoSuchMethodException e) {
@@ -156,7 +178,8 @@ implements Serializable
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		} finally{
-			receiving.set(false);
+			currentSender.set(null);
+			dispatching.set(false);
 		}
 	}
 
@@ -169,8 +192,11 @@ implements Serializable
 	protected abstract void doShare(MethodExecution execution)
 	throws WhiteDogException;
 
+	protected Peer newPeer(String peerId){
+		return peerFactory.createPeer(peerId);
+	}
+
 	protected void peerEntered(Peer peer){
-		register(peer, peer.getPeerId());
 		peers.add(peer);
 		firePeerEntered(peer);
 	}
@@ -178,7 +204,6 @@ implements Serializable
 	protected void peerLeaved(Peer peer){
 		firePeerLeaved(peer);
 		peers.remove(peer);
-		unregister(peer);
 	}
 
 	private void firePeerEntered(Peer peer){
@@ -194,17 +219,19 @@ implements Serializable
 	}
 
 	private String sessionId;
-	private Peer selfPeer = new Peer(StringUtil.randomString(16));
+	private PeerFactory peerFactory;
+	private Peer selfPeer;
 	private Set<Peer> peers = new LinkedHashSet<Peer>();
 	private Set<PeerListener> peerListeners = new LinkedHashSet<PeerListener>();
 
 	private transient Map<String, Object> idToObject = new HashMap<String, Object>();
 	private transient int count;
-	private transient ThreadLocal<Boolean> receiving = new ThreadLocal<Boolean>(){
+	private transient ThreadLocal<Boolean> dispatching = new ThreadLocal<Boolean>(){
 		protected Boolean initialValue() {
 			return Boolean.FALSE;
 		}
 	};
+	private transient ThreadLocal<Peer> currentSender = new ThreadLocal<Peer>();
 	private static Logger logger = Logger.getLogger(
 			Session.class.getPackage().getName());
 }

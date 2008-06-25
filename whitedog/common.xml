@@ -1,0 +1,11 @@
+<project name="common">
+	<tstamp />
+	<property name="jarbasename" value="${ant.project.name}" />
+	<dirname property="common.basedir" file="${ant.file.common}" />
+	<property file="${common.basedir}/common.properties" />
+	<property name="jarfile" value="${jarbasename}-${version}-${DSTAMP}.jar" />
+	<target name="dist">
+		<jar basedir="target/classes" jarfile="${jarfile}" includes="**/*.class" />
+		<move file="${jarfile}" todir="../whitedog-libs/whitedog" />
+	</target>
+</project>
