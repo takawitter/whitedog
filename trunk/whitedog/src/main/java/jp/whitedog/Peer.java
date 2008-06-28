@@ -28,23 +28,43 @@ import java.io.Serializable;
 public class Peer
 implements Serializable
 {
+	/**
+	 * Cunstructor.
+	 * @param peerId ID string of this peer.
+	 */
 	public Peer(String peerId){
 		this.peerId = peerId;
 	}
 
+	/**
+	 * Gets the peer ID.
+	 * @return peer ID.
+	 */
 	public String getPeerId(){
 		return peerId;
 	}
 
+	/**
+	 * Returns the hash code of this Peer.
+	 * Hash code is same to peerId.hashCode().
+	 */
 	public int hashCode(){
 		return peerId.hashCode();
 	}
 
+	/**
+	 * Returns true if this peer and value are same.
+	 * value must be an instance of Peer class and
+	 * have same peer ID to this peer.
+	 */
 	public boolean equals(Object value){
 		if(!(value instanceof Peer)) return false;
 		return peerId.equals(((Peer)value).peerId);
 	}
 
+	/**
+	 * Returns the string that represents this peer.
+	 */
 	public String toString(){
 		return "Peer#" + peerId;
 	}

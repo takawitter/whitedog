@@ -16,5 +16,12 @@
  */
 package jp.whitedog;
 
+/**
+ * The annotation that indicates connection start point.
+ * If you enable AutoSessionManagementAspect, connection to the
+ * session will start after the method execution that has this
+ * annotation.
+ * @author Takao Nakaguchi
+ */
 public @interface ConnectAfterHere {
 }

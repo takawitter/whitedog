@@ -115,6 +115,8 @@ implements Serializable
 	 * @param objectId id to object
 	 */
 	public void register(Object object, String objectId){
+		// TODO support state sharing. extract fields that have @Share annotation and register as synchronized field.
+		// Field.get when session getState event and Field.set when session setState event
 		SharedObject so = (SharedObject)object;
 		idToObject.put(objectId, object);
 		so.bindToSession(this, objectId);
