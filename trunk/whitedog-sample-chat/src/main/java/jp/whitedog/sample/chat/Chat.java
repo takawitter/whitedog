@@ -121,9 +121,7 @@ public class Chat extends JFrame{
 		@Override
 		@Share
 		public void addElement(Object obj) {
-			super.addElement(
-					session.getCurrentSender() + ": " + obj
-					);
+			super.addElement(obj);
 		}
 		private static final long serialVersionUID = 4939763289511399950L;
 	};
@@ -151,7 +149,9 @@ public class Chat extends JFrame{
 		});
 		button.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				chatLogModel.addElement(textField.getText());
+				chatLogModel.addElement(
+						session.getSelfPeer() + ": " + textField.getText()
+						);
 				textField.setText("");
 			}
 		});
