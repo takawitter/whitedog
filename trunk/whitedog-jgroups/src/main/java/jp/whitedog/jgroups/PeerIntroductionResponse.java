@@ -18,16 +18,29 @@ package jp.whitedog.jgroups;
 
 import java.io.Serializable;
 
+/**
+ * Message sent as the response of PeerIntroduction new comer sent.
+ * @author Takao Nakaguchi
+ */
 public class PeerIntroductionResponse
 implements Serializable
 {
+	/**
+	 * Constructor.
+	 * @param peerId Peer ID
+	 */
 	public PeerIntroductionResponse(String peerId){
 		this.peerId = peerId;
 	}
 
+	/**
+	 * Returns the Peer ID passed by Constructor.
+	 * @return Peer ID
+	 */
 	public String getPeerId(){
 		return peerId;
 	}
 
 	private String peerId;
+	private static final long serialVersionUID = 7410570777146896004L;
 }
