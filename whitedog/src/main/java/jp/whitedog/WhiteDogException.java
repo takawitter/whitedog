@@ -21,14 +21,27 @@ package jp.whitedog;
  * @author Takao Nakaguchi
  */
 public class WhiteDogException extends Exception{
+	/**
+	 * Constructor.
+	 * @param message exception message
+	 */
 	public WhiteDogException(String message){
 		super(message);
 	}
 
+	/**
+	 * Constructor.
+	 * @param cause the Throwable object that cased this exception
+	 */
 	public WhiteDogException(Throwable cause){
 		super(cause);
 	}
 
+	/**
+	 * Constructor.
+	 * @param message exception message
+	 * @param cause the Throwable object that cased this exception
+	 */
 	public WhiteDogException(String message, Throwable cause){
 		super(message, cause);
 	}

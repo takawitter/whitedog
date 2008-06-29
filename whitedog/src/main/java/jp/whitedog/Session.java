@@ -134,22 +134,35 @@ implements Serializable
 		so.unbindFromSession();
 	}
 
+	/**
+	 * Connect to the session.
+	 * @throws WhiteDogException failed to connect
+	 */
 	public void connect()
 	throws WhiteDogException{
 		doConnect();
 	}
 
+	/**
+	 * Disconnect from the session.
+	 * @throws WhiteDogException some network error occurred
+	 */
 	public void disconnect()
 	throws WhiteDogException{
 		doDisconnect();
 	}
 
+	/**
+	 * Gets the Peer list in the session.
+	 * @return Peer list
+	 */
 	public List<Peer> getPeers(){
 		return new ArrayList<Peer>(peers);
 	}
 
 	/**
-	 * share method execution.
+	 * Share method execution. The session encode method execution and
+	 * send Peers in the session.
 	 * @param object shared object
 	 * @param method method to share
 	 * @param args arguments of method
@@ -169,7 +182,14 @@ implements Serializable
 		return null;
 	}
 
-	public void dispatch(Peer sender, MethodExecution execution){
+	/**
+	 * Dispatche method execution. Actual session class (derived from
+	 * the Session class) should call this method when receiving
+	 * method execution message from other Peer.
+	 * @param sender sender of the message
+	 * @param execution MethodExecution object
+	 */
+	protected void dispatch(Peer sender, MethodExecution execution){
 		Object object = idToObject.get(execution.getObjectId());
 		if(object == null){
 			logger.warning("no object found: " + execution.getObjectId());

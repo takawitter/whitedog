@@ -36,7 +36,19 @@ public interface SharedObject {
 	 */
 	void unbindFromSession();
 
+	/**
+	 * Gets the object ID in session.
+	 * @return object ID
+	 */
 	String getObjectId();
 
+	/**
+	 * Share method execution. Implementer of this method must
+	 * send MethodExecution message to the session it belongs to.
+	 * @param method method to share its execution
+	 * @param arguments parameter to be passed to the method
+	 * @param proceeder proceeder of the method execution
+	 * @return return value of this process. usually null.
+	 */
 	Object share(Method method, Object[] arguments, Proceeder proceeder);
 }
