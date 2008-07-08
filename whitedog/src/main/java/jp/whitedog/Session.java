@@ -16,17 +16,24 @@
  */
 package jp.whitedog;
 
+import java.io.Externalizable;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import jp.whitedog.util.Pair;
 
 /**
  * Abstract class for the class that implements network session management.
@@ -35,6 +42,10 @@ import java.util.logging.Logger;
 public abstract class Session
 implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Constructor.
 	 * @param sessionId session ID
@@ -99,6 +110,14 @@ implements Serializable
 		peerListeners.remove(listener);
 	}
 
+	public void addStateSynchronizationListener(StateSynchronizationListener listener){
+		stateSynchronizationListeners.add(listener);
+	}
+
+	public void removeStateSynchronizationListener(StateSynchronizationListener listener){
+		stateSynchronizationListeners.remove(listener);
+	}
+
 	/**
 	 * register shared object.
 	 * @param object object to share its method execution
@@ -115,9 +134,23 @@ implements Serializable
 	 * @param objectId id to object
 	 */
 	public void register(Object object, String objectId){
-		// TODO support state sharing. extract fields that have @Share annotation and register as synchronized field.
-		// Field.get when session getState event and Field.set when session setState event
 		SharedObject so = (SharedObject)object;
+		for(Field f : so.getClass().getFields()){
+			if(!f.getClass().isAssignableFrom(Serializable.class)
+					&& !f.getClass().isAssignableFrom(Externalizable.class)
+					){
+				throw new WhiteDogRuntimeException(
+						"fields annotated by jp.whitedog.Share must be" +
+						" serializable or externalizable"
+						);
+			}
+			Share s = f.getAnnotation(Share.class);
+			if(s != null){
+				String fieldId = objectId +
+					"#" + f.getName();
+				idToFields.put(fieldId, Pair.create(object, f));
+			}
+		}
 		idToObject.put(objectId, object);
 		so.bindToSession(this, objectId);
 		logger.info("object registered: " + objectId);
@@ -180,6 +213,29 @@ implements Serializable
 		String id = object.getObjectId();
 		doShare(new MethodExecution(id, method, args));
 		return null;
+	}
+
+	protected Collection<Pair<Object, Field>> sharedFields(){
+		return idToFields.values();
+	}
+
+	protected void assign(String fieldId, Object value){
+		Pair<Object, Field> of = idToFields.get(fieldId);
+		if(of == null){
+			logger.warning("unknown field id specified.");
+			return;
+		}
+		Field f = of.getSecond();
+		if(!f.isAccessible()){
+			f.setAccessible(true);
+		}
+		try {
+			f.set(of.getFirst(), value);
+		} catch (IllegalArgumentException e) {
+			logger.log(Level.SEVERE, "failed to assign value", e);
+		} catch (IllegalAccessException e) {
+			logger.log(Level.SEVERE, "failed to assign value", e);
+		}
 	}
 
 	/**
@@ -251,8 +307,12 @@ implements Serializable
 	private Peer selfPeer;
 	private Set<Peer> peers = new LinkedHashSet<Peer>();
 	private Set<PeerListener> peerListeners = new LinkedHashSet<PeerListener>();
+	private Set<StateSynchronizationListener> stateSynchronizationListeners
+		= new LinkedHashSet<StateSynchronizationListener>();
 
 	private transient Map<String, Object> idToObject = new HashMap<String, Object>();
+	private Map<String, Pair<Object, Field>> idToFields
+		= new LinkedHashMap<String, Pair<Object, Field>>();
 	private transient int count;
 	private transient ThreadLocal<Boolean> dispatching = new ThreadLocal<Boolean>(){
 		protected Boolean initialValue() {

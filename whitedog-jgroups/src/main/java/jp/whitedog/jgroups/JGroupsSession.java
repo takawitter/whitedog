@@ -83,6 +83,14 @@ public class JGroupsSession extends Session {
 					handleViewAccepted(new_view);
 					super.viewAccepted(new_view);
 				}
+				@Override
+				public byte[] getState() {
+					return handleGetState();
+				}
+				@Override
+				public void setState(byte[] state) {
+					handleSetState(state);
+				}
 			});
 			channel.connect(getSessionId());
 			channel.send(new Message(
@@ -172,6 +180,14 @@ public class JGroupsSession extends Session {
 		}
 	}
 
+	private byte[] handleGetState(){
+		return new byte[]{};
+	}
+
+	private void handleSetState(byte[] state){
+		
+	}
+	
 	private JChannel channel;
 	private Set<Address> members = new HashSet<Address>();
 	private Map<Address, Peer> addressToPeer = new HashMap<Address, Peer>();

@@ -21,6 +21,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -39,6 +41,7 @@ import jp.whitedog.PeerFactory;
 import jp.whitedog.PeerListener;
 import jp.whitedog.Session;
 import jp.whitedog.Share;
+import jp.whitedog.StateSynchronizationListener;
 import jp.whitedog.WhiteDogException;
 import jp.whitedog.jgroups.JGroupsSession;
 
@@ -59,7 +62,6 @@ public class Chat extends JFrame{
 				p.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				p.setSize(600, 400);
 				p.setTitle("chat");
-				p.setVisible(true);
 			}
 		});
 	}
@@ -110,6 +112,12 @@ public class Chat extends JFrame{
 				userListModel.removeElement(peer);
 			}
 		});
+		session.addStateSynchronizationListener(new StateSynchronizationListener(){
+			public void stateSynchronized(){
+				chatLogModel.addLogs();
+				Chat.this.setVisible(true);
+			}
+		});
 		try{
 			session.connect();
 		} catch(WhiteDogException e){
@@ -117,14 +125,26 @@ public class Chat extends JFrame{
 		}
 	}
 
-	private DefaultListModel chatLogModel = new DefaultListModel(){
+	static class ChatListModel extends DefaultListModel{
 		@Override
 		@Share
 		public void addElement(Object obj) {
 			super.addElement(obj);
+			if(log.size() > 3){
+				log.remove();
+			}
+			log.add(obj.toString());
 		}
+		public void addLogs(){
+			for(String s : log){
+				addElement(s);
+			}
+		}
+		@Share
+		private Queue<String> log = new LinkedList<String>();
 		private static final long serialVersionUID = 4939763289511399950L;
-	};
+	}
+	private ChatListModel chatLogModel = new ChatListModel();
 	private DefaultListModel userListModel = new DefaultListModel();
 
 	private JPanel createChatPane(){
