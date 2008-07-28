@@ -43,10 +43,6 @@ public abstract class Session
 implements Serializable
 {
 	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	/**
 	 * Constructor.
 	 * @param sessionId session ID
 	 * @param factory Peer factory
@@ -135,21 +131,47 @@ implements Serializable
 	 */
 	public void register(Object object, String objectId){
 		SharedObject so = (SharedObject)object;
-		for(Field f : so.getClass().getFields()){
-			if(!f.getClass().isAssignableFrom(Serializable.class)
-					&& !f.getClass().isAssignableFrom(Externalizable.class)
-					){
-				throw new WhiteDogRuntimeException(
-						"fields annotated by jp.whitedog.Share must be" +
-						" serializable or externalizable"
-						);
-			}
-			Share s = f.getAnnotation(Share.class);
-			if(s != null){
-				String fieldId = objectId +
-					"#" + f.getName();
+		Class<?> clazz = object.getClass();
+		while(!clazz.equals(Object.class)){
+			for(Field f : clazz.getDeclaredFields()){
+				Share s = f.getAnnotation(Share.class);
+				if(s == null) continue;
+
+				if(!f.isAccessible()){
+					f.setAccessible(true);
+				}
+				Object value = null;
+				try{
+					value = f.get(object);
+				} catch(IllegalAccessException e){
+					logger.log(Level.WARNING, "failed to get field.", e);
+					continue;
+				}
+				Class<?> fieldType = f.getType();
+				if(!(fieldType.isPrimitive())
+						&& !(String.class.isAssignableFrom(fieldType))
+						&& !(Serializable.class.isAssignableFrom(fieldType))
+						&& !(Externalizable.class.isAssignableFrom(fieldType))
+						&& !(value instanceof Serializable)
+						&& !(value instanceof Externalizable)
+						){
+					// TODO more essential code needed
+					throw new WhiteDogRuntimeException(
+							"fields annotated by jp.whitedog.Share must be" +
+							" serializable or externalizable.  field name: "
+							+ f.getName() + "  field class: " + f.getType()
+							+ "  declaring class: " + object.getClass().getName()
+							);
+				}
+
+				String fieldId = objectId + "#" + f.getName();
 				idToFields.put(fieldId, Pair.create(object, f));
+				logger.info("field registered: " + fieldId
+						+ "  field name: "
+							+ f.getName() + "  field class: " + f.getType()
+							+ "  declaring class: " + object.getClass().getName());
 			}
+			clazz = clazz.getSuperclass();
 		}
 		idToObject.put(objectId, object);
 		so.bindToSession(this, objectId);
@@ -215,8 +237,8 @@ implements Serializable
 		return null;
 	}
 
-	protected Collection<Pair<Object, Field>> sharedFields(){
-		return idToFields.values();
+	protected Collection<Map.Entry<String, Pair<Object, Field>>> getSharedFields(){
+		return idToFields.entrySet();
 	}
 
 	protected void assign(String fieldId, Object value){
@@ -299,6 +321,12 @@ implements Serializable
 	private void firePeerLeaved(Peer peer){
 		for(PeerListener l : peerListeners){
 			l.peerLeaved(peer);
+		}
+	}
+
+	protected void fireSessionStart(){
+		for(StateSynchronizationListener l : stateSynchronizationListeners){
+			l.stateSynchronized();
 		}
 	}
 

@@ -16,13 +16,17 @@
  */
 package jp.whitedog.util;
 
+import java.io.Serializable;
+
 /**
  * Pair class.
  * @author Takao Nakaguchi
  * @param <T> class of first value
  * @param <U> class of second value
  */
-public class Pair<T, U> {
+public class Pair<T, U>
+implements Serializable
+{
 	public Pair(T first, U second){
 		this.first = first;
 		this.second = second;
@@ -65,4 +69,5 @@ public class Pair<T, U> {
 
 	private T first;
 	private U second;
+	private static final long serialVersionUID = 4955622148057290132L;
 }

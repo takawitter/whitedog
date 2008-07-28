@@ -130,14 +130,14 @@ public class Chat extends JFrame{
 		@Share
 		public void addElement(Object obj) {
 			super.addElement(obj);
-			if(log.size() > 3){
+			if(log.size() > 5){
 				log.remove();
 			}
 			log.add(obj.toString());
 		}
 		public void addLogs(){
 			for(String s : log){
-				addElement(s);
+				super.addElement(s);
 			}
 		}
 		@Share

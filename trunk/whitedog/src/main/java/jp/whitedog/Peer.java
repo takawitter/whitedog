@@ -57,7 +57,7 @@ implements Serializable
 	 * value must be an instance of Peer class and
 	 * have same peer ID to this peer.
 	 */
-	public boolean equals(Object value){
+	public final boolean equals(Object value){
 		if(!(value instanceof Peer)) return false;
 		return peerId.equals(((Peer)value).peerId);
 	}

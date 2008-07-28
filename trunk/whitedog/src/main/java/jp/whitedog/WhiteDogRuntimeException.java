@@ -24,4 +24,6 @@ public class WhiteDogRuntimeException extends RuntimeException{
 	public WhiteDogRuntimeException(String message){
 		super(message);
 	}
+
+	private static final long serialVersionUID = -581406684935211436L;
 }
