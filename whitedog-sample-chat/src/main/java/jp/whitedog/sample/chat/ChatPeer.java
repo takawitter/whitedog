@@ -37,6 +37,7 @@ public class ChatPeer extends Peer{
 	protected void displayNameChanged(){
 	}
 
+	@Share
 	private String displayName;
 	private static final long serialVersionUID = -8285756317969103419L;
 }
