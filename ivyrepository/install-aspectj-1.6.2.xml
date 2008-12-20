@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivy-module version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.jayasoft.org/misc/ivy/samples/ivy.xsd">
-    <info organisation="org.aspectj" module="aspectj" revision="1.6.2" status="release" publication="20081221023834"/>
+    <info organisation="org.aspectj" module="aspectj" revision="1.6.2">
+    	<license name="AspectJ" url="http://dev.eclipse.org/viewcvs/index.cgi/org.aspectj/modules/docs/dist/LICENSE-AspectJ.html?root=Tools_Project&revision=1.2&content-type=text%2Fplain"/>
+    </info>
     <publications>
 		<artifact name="aspectjrt"/>
 		<artifact name="aspectjtools"/>
