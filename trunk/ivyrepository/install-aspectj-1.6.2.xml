@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.jayasoft.org/misc/ivy/samples/ivy.xsd">
+    <info organisation="org.aspectj" module="aspectj" revision="1.6.2" status="release" publication="20081221023834"/>
+    <publications>
+		<artifact name="aspectjrt"/>
+		<artifact name="aspectjtools"/>
+		<artifact name="aspectjlib"/>
+		<artifact name="aspectjweaver"/>
+	</publications>
+</ivy-module>

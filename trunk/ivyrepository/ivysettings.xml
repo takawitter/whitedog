@@ -1,0 +1,9 @@
+<ivysettings>
+        <properties file="${ivy.settings.dir}/ivysettings.properties" />
+        <resolvers>
+                <filesystem name="internal">
+                        <ivy pattern="${repository.dir}/[organization]/[module]/ivy-[revision].xml" />
+                        <artifact pattern="${repository.dir}/[organization]/[module]/[artifact]-[revision].[ext]" />
+                </filesystem>
+        </resolvers>
+</ivysettings>
