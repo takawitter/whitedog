@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="1.0"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:noNamespaceSchemaLocation=
+                   "http://www.jayasoft.org/misc/ivy/samples/ivy.xsd">
+    <info organisation="jp.whitedog" module="whitedog"/>
+    <dependencies>
+        <dependency org="org.aspectj" name="aspectj" rev="1.6.2" />
+    </dependencies>
+</ivy-module>
