@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="common">
+	<dirname property="dir.build" file="${ant.file.common}" />
+	<tstamp />
+	<property file="${dir.build}/common.properties" />
+
+	<import file="def.java.xml" />
+	<import file="def.aspectj.xml" />
+	<import file="def.ivy.xml" />
+
+	<target name="init">
+	</target>
+
+	<target name="resolve" depends="init">
+		<initRepository />
+		<resolveDependencies />
+	</target>
+
+	<target name="prepareCompile">
+		<mkdir dir="${build}" />
+		<mkdir dir="${build.test}" />
+	</target>
+	
+	<target name="compileWithJavac" depends="resolve,prepareCompile">
+		<javac5 />
+	</target>
+
+	<target name="compileWithAjc" depends="resolve,prepareCompile">
+		<iajc5 />
+	</target>
+
+	<target name="compile" depends="compileWithJavac,resolve">
+	</target>
+
+	<target name="dist" depends="compile">
+		<mkdir dir="${dist}" />
+		<jar basedir="target/classes" jarfile="${dist}/${jarfile}" includes="**/*.class" />
+	</target>
+</project>

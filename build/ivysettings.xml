@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ivysettings>
+	<settings defaultResolver="chained"/>
+	<resolvers>
+		<chain name="chained" returnFirst="true">
+			<ivyrep name="whitedogrep"
+				ivyroot="http://whitedog.googlecode.com/svn/trunk/ivyrepository/"
+				ivypattern="[organization]/[module]/ivy-[revision].xml"				
+				artroot="http://whitedog.googlecode.com/svn/trunk/ivyrepository/"
+				artpattern="[organization]/[module]/[artifact]-[revision].[ext]"
+				/>
+			<ibiblio name="ibiblio" m2compatible="true"/>
+		</chain>
+	</resolvers>
+</ivysettings>
