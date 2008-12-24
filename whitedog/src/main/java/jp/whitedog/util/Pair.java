@@ -33,6 +33,7 @@ implements Serializable
 	}
 
 	public boolean equls(Object value){
+		if(value == null) return false;
 		if(!(value instanceof Pair)) return false;
 		Pair<?, ?> v = (Pair<?, ?>)value;
 		if(!first.equals(v.first)) return false;

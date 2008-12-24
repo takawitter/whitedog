@@ -18,6 +18,8 @@ package jp.whitedog;
 
 import java.lang.reflect.Method;
 
+import jp.whitedog.annotation.Share;
+
 /**
  * An aspect for adding SharedObject implementation to shared object (that
  * has the method annotated by @Share). 
