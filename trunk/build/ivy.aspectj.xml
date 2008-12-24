@@ -5,6 +5,6 @@
                    "http://www.jayasoft.org/misc/ivy/samples/ivy.xsd">
     <info organisation="jp.whitedog" module="whitedog"/>
     <dependencies>
-        <dependency org="org.aspectj" name="aspectj" rev="1.6.2" />
+        <dependency org="org.aspectj" name="aspectj" rev="[1.6,1.7[" />
     </dependencies>
 </ivy-module>
