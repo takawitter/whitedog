@@ -5,22 +5,20 @@
 	<import file="def.ivy.xml" />
 
 	<dirname property="dir.build" file="${ant.file.common}" />
-	<tstamp />
 	<property file="${dir.build}/common.properties" />
 
 	<target name="init">
 	</target>
 
 	<target name="resolve" depends="init">
-		<initRepository />
-		<resolveDependencies />
+		<resolve />
 	</target>
 
 	<target name="prepareCompile">
 		<mkdir dir="${build}" />
 		<mkdir dir="${build.test}" />
 	</target>
-	
+
 	<target name="compileWithJavac" depends="resolve,prepareCompile">
 		<javac5 />
 	</target>
@@ -35,5 +33,9 @@
 	<target name="dist" depends="compile">
 		<mkdir dir="${dist}" />
 		<jar basedir="target/classes" jarfile="${dist}/${jarfile}" includes="**/*.class" />
+		<mkdir dir="${dist}/lib" />
+		<copy todir="${dist}/lib">
+			<fileset refid="fileSet.lib" />
+		</copy>
 	</target>
 </project>

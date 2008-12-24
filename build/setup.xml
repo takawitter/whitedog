@@ -3,10 +3,12 @@
 	<dirname property="dir.build" file="${ant.file.common}" />
 	<property file="${dir.build}/common.properties" />
 	<import file="def.ivy.xml" />
+
 	<target name="resolve">
 		<delete dir="${lib.aspectj}" />
 		<retrieve ivyFile="ivy.aspectj.xml" dir="${lib.aspectj}" />
 	</target>
+
 	<target name="cleanCache">
 		<cleanCache />
 	</target>
