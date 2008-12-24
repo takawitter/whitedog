@@ -11,7 +11,7 @@
 	<publications>
 		<artifact name="aspectjrt"/>
 		<artifact name="aspectjtools"/>
-		<artifact name="aspectjlib"/>
 		<artifact name="aspectjweaver"/>
+		<artifact name="org.aspectj.matcher"/>
 	</publications>
 </ivy-module>
