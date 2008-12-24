@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="def.ivy" xmlns:ivy="antlib:org.apache.ivy.ant"
 	xmlns="antlib:org.apache.tools.ant">
-	<echo message="${lib.ivy}" />
+	<dirname property="dir.def.ivy" file="${ant.file.def.aspectj}"/>
+
 	<taskdef resource="org/apache/ivy/ant/antlib.xml" 
 		uri="antlib:org.apache.ivy.ant">
 		<classpath>
-			<fileset file="${lib.ivy}/*.jar"/>
+			<fileset file="${dir.def.ivy}/lib.ivy/*.jar"/>
 		</classpath>
 	</taskdef>
 
@@ -18,6 +19,7 @@
 	<macrodef name="resolveDependencies">
 		<sequential>
 			<ivy:resolve />
+			<ivy:cachepath pathid="path.lib" />
 			<ivy:retrieve />
 		</sequential>
 	</macrodef>

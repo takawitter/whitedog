@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="common">
-	<dirname property="dir.build" file="${ant.file.common}" />
-	<tstamp />
-	<property file="${dir.build}/common.properties" />
-
 	<import file="def.java.xml" />
 	<import file="def.aspectj.xml" />
 	<import file="def.ivy.xml" />
+
+	<dirname property="dir.build" file="${ant.file.common}" />
+	<tstamp />
+	<property file="${dir.build}/common.properties" />
 
 	<target name="init">
 	</target>
