@@ -4,7 +4,7 @@
 
 	<taskdef resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties">
 		<classpath> 
-			<pathelement path="${dir.def.aspectj}/lib/aspectjtools-1.6.2.jar" /> 
+			<pathelement path="${dir.def.aspectj}/lib.aspectj/aspectjtools-1.6.3.jar" /> 
 		</classpath>
 	</taskdef>
 
@@ -15,22 +15,17 @@
 			srcdir="${src}" destdir="${build}"
 			classpathref="path.lib"
 			X="hasMember"
-		>
-		</iajc> 
+		/> 
 	</presetdef>
 
-	<presetdef name="iajcjar5">
+	<presetdef name="iajc6">
 		<iajc
 			debug="true"
-			source="1.5" target="1.5" encoding="UTF-8"
-			sourceroots="${src}" outJar="${dist}/${jarname}"
-		>
-			<classpath>
-				<pathelement path="${lib.build}/aspectj/aspectjrt.jar" />
-				<fileset refid="filesetid.compilelib" />
-				<fileset refid="filesetid.lib" />
-			</classpath>
-		</iajc> 
+			source="1.6" target="1.6" encoding="UTF-8"
+			srcdir="${src}" destdir="${build}"
+			classpathref="path.lib"
+			X="hasMember"
+		/> 
 	</presetdef>
 </project>
 

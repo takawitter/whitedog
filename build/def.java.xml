@@ -13,4 +13,11 @@
 			encoding="UTF-8"
 			/>
 	</presetdef>
+
+	<presetdef name="jar">
+		<jar
+			basedir="${build}"
+			destfile="${dist}/${jarfile}"
+		/>
+	</presetdef>
 </project>
