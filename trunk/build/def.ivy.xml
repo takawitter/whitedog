@@ -12,20 +12,23 @@
 
 	<macrodef name="resolve">
 		<attribute name="ivyFile" default="ivy.xml" />
-		<attribute name="pathId" default=""/>
+		<attribute name="pathId" default="path.lib"/>
+		<attribute name="fileSetId" default="fileSet.lib"/>
 		<sequential>
 			<ivy:settings file="${dir.def.ivy}/ivy.settings.xml" />
-			<ivy:resolve file="@{file}" />
-			<ivy:cachepath id="@{pathId}" />
+			<ivy:resolve file="@{ivyFile}" />
+			<ivy:cachepath pathid="@{pathId}" />
+			<ivy:cachefileset setid="@{fileSetId}" />
 		</sequential>
 	</macrodef>
 
 	<macrodef name="retrieve">
 		<attribute name="ivyFile" default="ivy.xml" />
+		<attribute name="pathId" default="path.lib"/>
+		<attribute name="fileSetId" default="fileSet.lib"/>
 		<attribute name="dir" default="lib" />		
 		<sequential>
-			<ivy:settings file="${dir.def.ivy}/ivy.settings.xml" />
-			<ivy:resolve file="@{ivyFile}" />
+			<resolve ivyFile="@{ivyFile}" pathId="@{pathId}" fileSetId="@{fileSetId}" />
 			<ivy:retrieve pattern="@{dir}/[artifact]-[revision].[ext]" />
 		</sequential>
 	</macrodef>

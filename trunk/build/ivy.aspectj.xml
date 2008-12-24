@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ivy-module version="1.0"
-               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xsi:noNamespaceSchemaLocation=
-                   "http://www.jayasoft.org/misc/ivy/samples/ivy.xsd">
-    <info organisation="jp.whitedog" module="whitedog"/>
+<ivy-module version="2.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+	<info organisation="jp.whitedog" module="build.setup"/>
     <dependencies>
         <dependency org="org.aspectj" name="aspectj" rev="[1.6,1.7[" />
     </dependencies>
