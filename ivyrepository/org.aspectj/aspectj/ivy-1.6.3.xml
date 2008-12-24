@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
-	<info organisation="org.aspectj" module="aspectj" revision="1.6.3" status="release" publication="20081224220954">
+	<info organisation="org.aspectj" module="aspectj" revision="1.6.3" status="release" publication="20081224223801">
 		<license name="AspectJ" url="http://dev.eclipse.org/viewcvs/index.cgi/org.aspectj/modules/docs/dist/LICENSE-AspectJ.html?root=Tools_Project&amp;revision=1.2&amp;content-type=text%2Fplain"/>
 	</info>
 	<publications>
 		<artifact name="aspectjrt"/>
 		<artifact name="aspectjtools"/>
-		<artifact name="aspectjlib"/>
 		<artifact name="aspectjweaver"/>
+		<artifact name="org.aspectj.matcher"/>
 	</publications>
 </ivy-module>
