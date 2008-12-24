@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="def.aspectj">
+	<dirname property="dir.def.aspectj" file="${ant.file.def.aspectj}"/>
+
 	<taskdef resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties">
 		<classpath> 
-			<pathelement path="${lib.build}/aspectjtools-1.6.2.jar" /> 
+			<pathelement path="${dir.def.aspectj}/lib/aspectjtools-1.6.2.jar" /> 
 		</classpath>
 	</taskdef>
 
@@ -11,12 +13,9 @@
 			debug="true"
 			source="1.5" target="1.5" encoding="UTF-8"
 			srcdir="${src}" destdir="${build}"
+			classpathref="path.lib"
+			X="hasMember"
 		>
-			<classpath>
-				<pathelement path="${lib.build}/aspectjrt.jar" />
-				<fileset refid="filesetid.compilelib" />
-				<fileset refid="filesetid.lib" />
-			</classpath>
 		</iajc> 
 	</presetdef>
 
