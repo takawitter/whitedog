@@ -18,7 +18,7 @@ package jp.whitedog;
 
 import java.lang.reflect.Method;
 
-import jp.whitedog.Share;
+import jp.whitedog.annotation.Share;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.CodeSignature;

@@ -33,6 +33,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jp.whitedog.annotation.Share;
 import jp.whitedog.util.Pair;
 
 /**

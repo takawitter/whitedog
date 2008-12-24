@@ -20,6 +20,9 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
+import jp.whitedog.annotation.ConnectAfterHere;
+import jp.whitedog.annotation.Share;
+
 /**
  * Aspect for automatic session management.
  * This aspect does:
