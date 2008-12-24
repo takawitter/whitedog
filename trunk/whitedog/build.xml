@@ -1,3 +1,6 @@
 <project name="whitedog" default="dist">
-	<import file="common.xml" />
+	<tstamp/>
+	<property file="build.properties" />
+	<import file="../build/common.xml" />
+	<target name="compile" depends="compileWithAjc" />
 </project>
