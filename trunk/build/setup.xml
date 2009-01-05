@@ -6,7 +6,8 @@
 
 	<target name="resolve">
 		<delete dir="${lib.aspectj}" />
-		<retrieve ivyFile="ivy.aspectj.xml" dir="${lib.aspectj}" />
+		<resolve ivyFile="ivy.aspectj.xml" />
+		<retrieve dir="${lib.aspectj}" />
 	</target>
 
 	<target name="cleanCache">

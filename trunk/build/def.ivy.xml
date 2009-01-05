@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project name="def.ivy" xmlns:ivy="antlib:org.apache.ivy.ant"
-	xmlns="antlib:org.apache.tools.ant">
+<project name="def.ivy" xmlns:ivy="antlib:org.apache.ivy.ant">
 	<dirname property="dir.def.ivy" file="${ant.file.def.aspectj}"/>
 
 	<taskdef resource="org/apache/ivy/ant/antlib.xml" 
@@ -23,13 +22,23 @@
 	</macrodef>
 
 	<macrodef name="retrieve">
-		<attribute name="ivyFile" default="ivy.xml" />
-		<attribute name="pathId" default="path.lib"/>
-		<attribute name="fileSetId" default="fileSet.lib"/>
 		<attribute name="dir" default="lib" />		
 		<sequential>
-			<resolve ivyFile="@{ivyFile}" pathId="@{pathId}" fileSetId="@{fileSetId}" />
 			<ivy:retrieve pattern="@{dir}/[artifact]-[revision].[ext]" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="publish">
+		<attribute name="resolver" default="internal" />
+		<element name="artifactdefs" />
+		<sequential>
+			<ivy:publish
+				resolver="@{resolver}"
+				pubrevision="${revision}"
+				overwrite="true"
+			>
+				<artifactdefs/>
+			</ivy:publish>
 		</sequential>
 	</macrodef>
 
