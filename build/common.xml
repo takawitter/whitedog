@@ -10,6 +10,10 @@
 	<target name="init">
 	</target>
 
+	<target name="cleanCache">
+		<cleanCache/>
+	</target>
+
 	<target name="resolve" depends="init">
 		<resolve />
 	</target>
@@ -34,7 +38,7 @@
 		<mkdir dir="${dist}" />
 		<jar basedir="target/classes" jarfile="${dist}/${jarfile}" includes="**/*.class" />
 		<mkdir dir="${dist}/lib" />
-		<copy todir="${dist}/lib">
+		<copy todir="${dist}/lib" flatten="true">
 			<fileset refid="fileSet.lib" />
 		</copy>
 	</target>
