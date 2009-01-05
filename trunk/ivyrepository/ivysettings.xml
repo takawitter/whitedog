@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivysettings>
 	<properties file="${ivy.settings.dir}/ivysettings.properties" />
+	<settings defaultResolver="default" />
 	<resolvers>
-		<filesystem name="internal">
-			<ivy pattern="${repository.dir}/[organization]/[module]/ivy-[revision].xml" />
-			<artifact pattern="${repository.dir}/[organization]/[module]/[artifact]-[revision].[ext]" />
-		</filesystem>
+		<chain name="default">
+			<filesystem name="internal">
+				<ivy pattern="${repository.dir}/[organization]/[module]/ivy-[revision].xml" />
+				<artifact pattern="${repository.dir}/[organization]/[module]/[artifact]-[revision].[ext]" />
+			</filesystem>
+			<ibiblio name="ibiblio" m2compatible="true" />
+		</chain>
 	</resolvers>
 </ivysettings>
