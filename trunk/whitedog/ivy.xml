@@ -2,10 +2,16 @@
 <ivy-module version="2.0" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
-    <info organisation="jp.whitedog" module="whitedog"/>
-    <dependencies>
-        <dependency org="org.aspectj" name="aspectj" rev="[1.6,1.7[">
-        	<artifact name="aspectjrt" />
-        </dependency>
-    </dependencies>
+	<info organisation="jp.whitedog" module="whitedog">
+		<license name="Apache License Version 2.0"
+			url="http://www.apache.org/licenses/LICENSE-2.0.txt" />
+	</info>
+	<publications>
+		<artifact name="whitedog" />
+	</publications>
+	<dependencies>
+		<dependency org="org.aspectj" name="aspectj" rev="1.6.+">
+			<artifact name="aspectjrt" />
+		</dependency>
+	</dependencies>
 </ivy-module>
