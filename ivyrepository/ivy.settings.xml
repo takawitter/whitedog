@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivysettings>
-	<properties file="${ivy.settings.dir}/ivysettings.properties" />
+	<property
+		name="repository.dir"
+		value="/Users/nakaguchi/Documents/workspace_whitedog_ganymede/ivyrepository" />
 	<settings defaultResolver="default" />
 	<resolvers>
 		<chain name="default">

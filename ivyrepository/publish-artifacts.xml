@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="publish-artifacts" default="publish-all">
+	<import file="../build/common.xml" />
+
+	<target name="publish-all" xmlns:ivy="antlib:org.apache.ivy.ant">
+		<ivy:buildlist reference="builds">
+			<fileset dir=".." includes="*/build.xml" excludes="build/**" />
+		</ivy:buildlist>
+		<subant target="publish" buildpathref="builds">
+			<property name="ivy.publish.settings.xml" value="${basedir}/ivy.settings.xml" />
+		</subant>
+	</target>
+</project>
