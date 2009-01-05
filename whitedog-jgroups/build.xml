@@ -1,3 +1,5 @@
 <project name="whitedog-jgroups" default="dist">
-	<import file="../whitedog/common.xml" />
+	<tstamp />
+	<property name="revision" value="0.9.5-${DSTAMP}" />
+	<import file="../build/common.xml" />
 </project>
