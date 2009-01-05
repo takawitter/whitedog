@@ -1,6 +1,6 @@
 <project name="whitedog" default="dist">
 	<tstamp/>
-	<property file="build.properties" />
+	<property name="revision" value="0.9.5-${DSTAMP}" />
 	<import file="../build/common.xml" />
 	<target name="compile" depends="compileWithAjc" />
 </project>
