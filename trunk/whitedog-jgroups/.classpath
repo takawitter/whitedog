@@ -4,6 +4,6 @@
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/whitedog"/>
-	<classpathentry kind="lib" path="/whitedog-libs/jgroups/jgroups-all.jar"/>
+	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/ivy.xml/*"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

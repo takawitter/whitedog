@@ -40,9 +40,9 @@ import jp.whitedog.Peer;
 import jp.whitedog.PeerFactory;
 import jp.whitedog.PeerListener;
 import jp.whitedog.Session;
-import jp.whitedog.Share;
 import jp.whitedog.StateSynchronizationListener;
 import jp.whitedog.WhiteDogException;
+import jp.whitedog.annotation.Share;
 import jp.whitedog.jgroups.JGroupsSession;
 
 /**

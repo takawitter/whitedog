@@ -17,7 +17,7 @@
 package jp.whitedog.sample.chat;
 
 import jp.whitedog.Peer;
-import jp.whitedog.Share;
+import jp.whitedog.annotation.Share;
 
 public class ChatPeer extends Peer{
 	public ChatPeer(String peerId){
