@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <ivysettings>
 	<settings defaultResolver="chained"/>
-	<property name="internal.dir" value="${dir.build}/../ivyrepository" />
 	<resolvers>
 		<chain name="chained" returnFirst="true">
 			<ivyrep name="whitedogrep"

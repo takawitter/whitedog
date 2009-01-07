@@ -30,14 +30,15 @@
 
 	<macrodef name="publish">
 		<attribute name="resolver" default="internal" />
-		<element name="artifactdefs" />
 		<sequential>
+			<ivy:settings id="publish.setting" file="${ivy.publish.settings.xml}" />
 			<ivy:publish
 				resolver="@{resolver}"
 				pubrevision="${revision}"
 				overwrite="true"
+				settingsref="publish.setting"
 			>
-				<artifactdefs/>
+				<ivy:artifacts pattern="${dist}/[artifact]-[revision].[ext]" />
 			</ivy:publish>
 		</sequential>
 	</macrodef>
