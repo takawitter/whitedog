@@ -26,8 +26,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import jp.whitedog.Session;
-import jp.whitedog.Share;
 import jp.whitedog.WhiteDogException;
+import jp.whitedog.annotation.Share;
 import jp.whitedog.jgroups.JGroupsSession;
 
 /**
