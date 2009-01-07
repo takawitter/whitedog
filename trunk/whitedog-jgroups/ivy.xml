@@ -11,8 +11,6 @@
 	</publications>
 	<dependencies>
 		<dependency org="jp.whitedog" name="whitedog" rev="0.9.+" />
-		<dependency org="org.jgroups" name="jgroups" rev="2.7.+">
-			<artifact name="jgroups-all" />
-		</dependency>
+		<dependency org="org.jgroups" name="jgroups" rev="2.7.+" />
 	</dependencies>
 </ivy-module>
