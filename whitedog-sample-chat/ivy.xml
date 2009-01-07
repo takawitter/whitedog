@@ -10,8 +10,6 @@
 		<artifact name="whitedog-messenger" />
 	</publications>
 	<dependencies>
-		<dependency org="jp.whitedog" name="whitedog-jgroups" rev="0.9.+">
-			<artifact name="whitedog-jgroups" />
-		</dependency>
+		<dependency org="jp.whitedog" name="whitedog-jgroups" rev="0.9.+" />
 	</dependencies>
 </ivy-module>
