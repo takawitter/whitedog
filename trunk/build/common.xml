@@ -42,4 +42,13 @@
 			<fileset refid="fileSet.lib" />
 		</copy>
 	</target>
+
+	<target name="publish" depends="dist">
+		<publish />
+	</target>
+
+	<target name="clean">
+		<delete dir="${build}" />
+		<delete dir="${buid.test}" />
+	</target>
 </project>
