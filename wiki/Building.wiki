@@ -21,7 +21,7 @@ Launch Eclipse and checkout projects you need.
  * whitedog - !WhiteDog core (required)
  * whitedog-jgroups - session implementation using JGroups (optional)
  * whitedog-local - session implementation of in-vm (optional)
- * whitedog-sample-autosessionpaint - sample paint application using !@ConnectAtHere annotation (depends on whitedog-jgroups)
+ * whitedog-sample-autosessionpaint - sample paint application using @!ConnectAtHere annotation (depends on whitedog-jgroups)
  * whitedog-sample-chat - sample chat application (depends on whitedog-jroups)
  * whitedog-sample-localdoublepaint - sample paint application (depends on whitedog-local)
  * whitedog-sample-paint - sample paint application (depends on whitedog-jgroups)
