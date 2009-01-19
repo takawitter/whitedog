@@ -1,16 +1,31 @@
 #summary Building instructions using Eclipse3.3.
 #labels Phase-Implementation,Featured
 
-= Setup Eclipse =
+= Setup eclipse =
 
-!WhiteDog project is using AJDT1.5.3(!AspectJ1.6.1) dev build.  Install this plugin from following site.
-{{{
-Name: AJDT 1.5.3 dev Update Site
-URL : http://download.eclipse.org/tools/ajdt/33/update
-}}}
+!WhiteDog project uses following version of Eclipse and plugins
+
+ * Eclipse 3.4.1 http://eclipse.org (Ganymede SR1)
+ * AJDT 1.6.2(with !AspectJ1.6.3) http://download.eclipse.org/tools/ajdt/34/update
+ * Subclipse 1.4.7 http://subclipse.tigris.org/update_1.4.x
+ * IvyDE 2.0.0.beta1(with Ivy 2.0.0.cr2) http://www.apache.org/dist/ant/ivyde/updatesite
 
 Note: jp.whitedog.!ShareAspect needs *hasmember()* type pattern. So you must turned on Has Member option (AspectJ Compiler -> Other -> Has Member).
 
 = Building !WhiteDog =
 
-After you setup Eclipse, Eclipse automatically build (or Ctrl(Commnd)-B when you turned off automatic build) !WhiteDog. To make jar archive, run build.xml in whitedog project. Then whitedog-libs/whitedog/whitedog-`*`.jar will be created.
+Launch Eclipse and checkout projects you need.
+
+ * build - common build scripts (required)
+ * ivyrepository - ivy repository (not required. required only for module publishers)
+ * whitedog - !WhiteDog core (required)
+ * whitedog-jgroups - session implementation using JGroups (optional)
+ * whitedog-local - session implementation of in-vm (optional)
+ * whitedog-sample-autosessionpaint - sample paint application using !@ConnectAtHere annotation (depends on whitedog-jgroups)
+ * whitedog-sample-chat - sample chat application (depends on whitedog-jroups)
+ * whitedog-sample-localdoublepaint - sample paint application (depends on whitedog-local)
+ * whitedog-sample-paint - sample paint application (depends on whitedog-jgroups)
+
+When you checkout projects, Eclipse and IvyDE plugin automatically download required libraries and build. After build succeeded you can run sample programs in Eclipse.
+
+You can also create jar file and gather required jars by executing build.xml as ant script. If you are behind the firewall (you must access internet via proxy), you must run ant from command line.
