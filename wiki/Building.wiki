@@ -28,4 +28,4 @@ Launch Eclipse and checkout projects you need.
 
 When you checkout projects, Eclipse and IvyDE plugin automatically download required libraries and build. After build succeeded you can run sample programs in Eclipse.
 
-You can also create jar file and gather required jars by executing build.xml as ant script. If you are behind the firewall (you must access internet via proxy), you must run ant from command line.
+You can also create jar file (into dist directory) and gather required jars (into dist/lib directory) by executing build.xml as ant script. If you are behind the firewall (you must access internet via proxy), you must run ant from command line.
