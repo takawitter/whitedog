@@ -2,17 +2,15 @@
 <ivy-module version="2.0" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
-	<info organisation="jp.whitedog" module="whitedog-sample-localdoublechat">
+	<info organisation="jp.whitedog" module="whitedog-sample-localdoublepaint">
 		<license name="Apache License Version 2.0"
 			url="http://www.apache.org/licenses/LICENSE-2.0.txt" />
 	</info>
 	<publications>
-		<artifact name="whitedog-sample-localdoublechat" />
+		<artifact name="whitedog-sample-localdoublepaint" />
 	</publications>
 	<dependencies>
-		<dependency org="jp.whitedog" name="whitedog" rev="0.9.+">
-			<artifact name="whitedog" />
-		</dependency>
+		<dependency org="jp.whitedog" name="whitedog" rev="0.9.+" />
 		<dependency org="jp.whitedog" name="whitedog-local" rev="0.9.+" />
 	</dependencies>
 </ivy-module>
