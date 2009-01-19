@@ -1,0 +1,6 @@
+<project name="whitedog-sample-chat" default="dist">
+	<tstamp/>
+	<property name="revision" value="0.9.5-${DSTAMP}" />
+	<import file="../build/common.xml" />
+	<target name="compile" depends="compileWithAjc" />
+</project>
