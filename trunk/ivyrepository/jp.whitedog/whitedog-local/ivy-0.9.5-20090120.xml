@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+	<info organisation="jp.whitedog" module="whitedog-local" revision="0.9.5-20090120" status="integration" publication="20090120011635">
+		<license name="Apache License Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
+	</info>
+	<publications>
+		<artifact name="whitedog-local"/>
+	</publications>
+	<dependencies>
+		<dependency org="jp.whitedog" name="whitedog" rev="0.9.5-20090106" revConstraint="0.9.+">
+			<artifact name="whitedog"/>
+		</dependency>
+	</dependencies>
+</ivy-module>
