@@ -25,8 +25,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import jp.whitedog.ConnectAfterHere;
-import jp.whitedog.Share;
+import jp.whitedog.annotation.ConnectAfterHere;
+import jp.whitedog.annotation.Share;
 
 /**
  * Sample auto-session-managed paint application.
