@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
-  <ModulePrefs title="simple mixi Appli"></ModulePrefs>
+  <ModulePrefs title="use Social Data">
+    <Require feature="opensocial-0.8"/>
+  </ModulePrefs>
   <Content type="html">
   <![CDATA[
-      <h1>Hello Social World!</h1>
+    <script type="text/javascript">
+        function request() {
+             var req = opensocial.newDataRequest();
+             req.add(req.newFetchPersonRequest("VIEWER"), "viewer_data");
+             req.send(response);
+        }
+
+        function response(dataResponse) {
+             var viewer = dataResponse.get("viewer_data").getData();
+             var nickname = document.getElementById('nickname');
+
+             var text = document.createTextNode(viewer.getDisplayName());
+             nickname.appendChild(text);
+        }
+        gadgets.util.registerOnLoadHandler(request);
+    </script>
+
+    <p>こんにちは<span id="nickname"></span>さん.</p>
   ]]>
   </Content>
 </Module>
