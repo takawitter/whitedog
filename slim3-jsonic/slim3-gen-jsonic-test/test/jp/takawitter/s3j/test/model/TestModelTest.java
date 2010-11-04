@@ -17,7 +17,7 @@ public class TestModelTest {
 		System.out.println(json);
 		System.out.println(net.arnx.jsonic.JSON.encode(model));
 		TestModel model2 = m.jsonToModel(json);
-		Assert.assertEquals(model.isBoolProp(), model2.isBoolProp());
+		Assert.assertEquals(model.isBooleanProp(), model2.isBooleanProp());
 		Assert.assertEquals(model.getShortProp(), model2.getShortProp());
 		Assert.assertEquals(model.getIntProp(), model2.getIntProp());
 		Assert.assertEquals(model.getLongProp(), model2.getLongProp());
@@ -25,5 +25,11 @@ public class TestModelTest {
 		Assert.assertEquals(model.getDoubleProp(), model2.getDoubleProp());
 		Assert.assertEquals(model.getStringProp(), model2.getStringProp());
 		Assert.assertEquals(model.getEncryptedStringProp(), model2.getEncryptedStringProp());
+		Assert.assertEquals(model.getWrapperBooleanProp(), model2.getWrapperBooleanProp());
+		Assert.assertEquals(model.getWrapperShortProp(), model2.getWrapperShortProp());
+		Assert.assertEquals(model.getWrapperIntegerProp(), model2.getWrapperIntegerProp());
+		Assert.assertEquals(model.getWrapperLongProp(), model2.getWrapperLongProp());
+		Assert.assertEquals(model.getWrapperFloatProp(), model2.getWrapperFloatProp());
+		Assert.assertEquals(model.getWrapperDoubleProp(), model2.getWrapperDoubleProp());
 	}
 }

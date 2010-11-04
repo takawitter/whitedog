@@ -17,16 +17,14 @@ package jp.takawitter.s3j.generator;
 
 import static org.slim3.gen.ClassConstants.Object;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slim3.gen.datastore.AbstractDataType;
 import org.slim3.gen.datastore.CorePrimitiveType;
 import org.slim3.gen.datastore.CoreReferenceType;
 import org.slim3.gen.datastore.DataType;
 import org.slim3.gen.datastore.KeyType;
-import org.slim3.gen.datastore.PrimitiveBooleanType;
-import org.slim3.gen.datastore.PrimitiveDoubleType;
-import org.slim3.gen.datastore.PrimitiveFloatType;
-import org.slim3.gen.datastore.PrimitiveIntType;
-import org.slim3.gen.datastore.PrimitiveLongType;
-import org.slim3.gen.datastore.PrimitiveShortType;
 import org.slim3.gen.datastore.SimpleDataTypeVisitor;
 import org.slim3.gen.datastore.StringType;
 import org.slim3.gen.desc.AttributeMetaDesc;
@@ -106,7 +104,6 @@ public class S3JModelMetaGenerator extends ModelMetaGenerator {
         @Override
         public Void visitKeyType(KeyType type, AttributeMetaDesc p)
         		throws RuntimeException {
-            printer.println("//KeyType");
             printer.println("if(m.%s() != null){", p.getReadMethodName());
             printer.indent();
         	printer.println(
@@ -130,7 +127,6 @@ public class S3JModelMetaGenerator extends ModelMetaGenerator {
         @Override
         public Void visitCorePrimitiveType(CorePrimitiveType type,
                 AttributeMetaDesc p) throws RuntimeException {
-            printer.println("//CorePrimitiveType");
         	printer.println(
                     "b.append(\"\\\"%1$s\\\":\").append(m.%2$s());",
                     p.getName(),
@@ -141,7 +137,6 @@ public class S3JModelMetaGenerator extends ModelMetaGenerator {
         @Override
         public Void visitCoreReferenceType(CoreReferenceType type,
                 AttributeMetaDesc p) throws RuntimeException {
-            printer.println("//CoreReferenceType");
         	printer.println(
                     "b.append(\"\\\"%1$s\\\":\").append(m.%2$s());",
                     p.getName(),
@@ -152,7 +147,6 @@ public class S3JModelMetaGenerator extends ModelMetaGenerator {
         @Override
         public Void visitStringType(StringType type, AttributeMetaDesc p)
         throws RuntimeException {
-            printer.println("// StringType");
             printer.println("if(m.%s() != null){", p.getReadMethodName());
             printer.indent();
             String getMethodCall = "m.%2$s()";
@@ -222,7 +216,6 @@ public class S3JModelMetaGenerator extends ModelMetaGenerator {
         @Override
         public Void visitKeyType(KeyType type, AttributeMetaDesc p)
         		throws RuntimeException {
-            printer.println("// KeyType");
             printer.println("if(map.get(\"%s\") != null){", p.getAttributeName());
             printer.indent();
         	printer.println(
@@ -244,81 +237,23 @@ public class S3JModelMetaGenerator extends ModelMetaGenerator {
         }
 
         @Override
-        public Void visitPrimitiveBooleanType(PrimitiveBooleanType type,
+        public Void visitCorePrimitiveType(CorePrimitiveType type,
         		AttributeMetaDesc p) throws RuntimeException {
-            printer.println("// PrimitiveBooleanType");
-            visitPrimitiveType(type, p, "Boolean.parseBoolean");
+            visitNumberType(type, p, type.getWrapperClassName()
+            		+ classToParseMethod.get(type.getWrapperClassName()));
         	return null;
-        }
-
-        @Override
-        public Void visitPrimitiveShortType(PrimitiveShortType type,
-        		AttributeMetaDesc p) throws RuntimeException {
-            printer.println("// PrimitiveShortType");
-            visitPrimitiveType(type, p, "Short.parseShort");
-        	return null;
-        }
-
-        @Override
-        public Void visitPrimitiveIntType(PrimitiveIntType type,
-        		AttributeMetaDesc p) throws RuntimeException {
-            printer.println("// PrimitiveIntType");
-            visitPrimitiveType(type, p, "Integer.parseInt");
-        	return null;
-        }
-
-        @Override
-        public Void visitPrimitiveLongType(PrimitiveLongType type,
-        		AttributeMetaDesc p) throws RuntimeException {
-            printer.println("// PrimitiveLongType");
-            visitPrimitiveType(type, p, "Long.parseLong");
-        	return null;
-        }
-
-        @Override
-        public Void visitPrimitiveFloatType(PrimitiveFloatType type,
-        		AttributeMetaDesc p) throws RuntimeException {
-            printer.println("// PrimitiveFloatType");
-            visitPrimitiveType(type, p, "Float.parseFloat");
-        	return null;
-        }
-
-        @Override
-        public Void visitPrimitiveDoubleType(PrimitiveDoubleType type,
-        		AttributeMetaDesc p) throws RuntimeException {
-            printer.println("// PrimitiveDoubleType");
-            visitPrimitiveType(type, p, "Double.parseDouble");
-        	return null;
-        }
-
-        private void visitPrimitiveType(CorePrimitiveType type,
-        		AttributeMetaDesc p, String parseMethod){
-            printer.println("if(map.get(\"%s\") != null){", p.getName());
-            printer.indent();
-        	printer.println(
-                    "m.%1$s(%2$s(map.get(\"%3$s\").toString()));",
-                    p.getWriteMethodName(),
-                    parseMethod,
-                    p.getName());
-        	printer.unindent();
-        	printer.println("}");
         }
 
         @Override
         public Void visitCoreReferenceType(CoreReferenceType type,
-                AttributeMetaDesc p) throws RuntimeException {
-            printer.println("//CoreReferenceType");
-        	printer.println(
-                    "b.append(\"\\\"%1$s\\\":\").append(m.%2$s());",
-                    p.getName(),
-                    p.getReadMethodName());
-            return null;
+        		AttributeMetaDesc p) throws RuntimeException {
+        	visitNumberType(type, p, type.getTypeName() + ".valueOf");
+        	return null;
         }
 
         @Override
         public Void visitStringType(StringType type, AttributeMetaDesc p)
         throws RuntimeException {
-            printer.println("// StringType");
             printer.println("if(map.get(\"%s\") != null){", p.getName());
             printer.indent();
             String getMethodCall = "map.get(\"%2$s\").toString()";
@@ -341,6 +276,29 @@ public class S3JModelMetaGenerator extends ModelMetaGenerator {
             return null;
         }
 
+        private void visitNumberType(AbstractDataType type,
+        		AttributeMetaDesc p, String parseMethod){
+            printer.println("if(map.get(\"%s\") != null){", p.getName());
+            printer.indent();
+        	printer.println(
+                    "m.%1$s(%2$s(map.get(\"%3$s\").toString()));",
+                    p.getWriteMethodName(),
+                    parseMethod,
+                    p.getName());
+        	printer.unindent();
+        	printer.println("}");
+        }
+
         private final Printer printer;
+    }
+
+    private static Map<String, String> classToParseMethod = new HashMap<String, String>();
+    static{
+    	classToParseMethod.put("java.lang.Boolean", ".parseBoolean");
+    	classToParseMethod.put("java.lang.Short", ".parseShort");
+    	classToParseMethod.put("java.lang.Integer", ".parseInt");
+    	classToParseMethod.put("java.lang.Long", ".parseLong");
+    	classToParseMethod.put("java.lang.Float", ".parseFloat");
+    	classToParseMethod.put("java.lang.Double", ".parseDouble");
     }
 }
