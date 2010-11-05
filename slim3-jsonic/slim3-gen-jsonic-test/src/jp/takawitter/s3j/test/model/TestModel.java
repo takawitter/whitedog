@@ -1,5 +1,9 @@
 package jp.takawitter.s3j.test.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 
@@ -99,6 +103,36 @@ public class TestModel {
 	public void setWrapperDoubleProp(Double wrapperDoubleProp) {
 		this.wrapperDoubleProp = wrapperDoubleProp;
 	}
+	public List<Short> getShortListProp() {
+		return shortListProp;
+	}
+	public void setShortListProp(List<Short> shortListProp) {
+		this.shortListProp = shortListProp;
+	}
+	public List<Integer> getIntegerListProp() {
+		return integerListProp;
+	}
+	public void setIntegerListProp(List<Integer> integerListProp) {
+		this.integerListProp = integerListProp;
+	}
+	public List<Long> getLongListProp() {
+		return longListProp;
+	}
+	public void setLongListProp(List<Long> longListProp) {
+		this.longListProp = longListProp;
+	}
+	public List<Float> getFloatListProp() {
+		return floatListProp;
+	}
+	public void setFloatListProp(List<Float> floatListProp) {
+		this.floatListProp = floatListProp;
+	}
+	public List<Double> getDoubleListProp() {
+		return doubleListProp;
+	}
+	public void setDoubleListProp(List<Double> doubleListProp) {
+		this.doubleListProp = doubleListProp;
+	}
 
 
 	@Attribute(primaryKey=true)
@@ -118,4 +152,9 @@ public class TestModel {
 	private Long wrapperLongProp = 20000L;
 	private Float wrapperFloatProp = 1.0f;
 	private Double wrapperDoubleProp = 234.56;
+	private List<Short> shortListProp = new ArrayList<Short>(Arrays.asList((short)1, (short)2, (short)3, (short)4));
+	private List<Integer> integerListProp = new ArrayList<Integer>(Arrays.asList(1, 2, 3, 4));
+	private List<Long> longListProp = new ArrayList<Long>(Arrays.asList(1L, 2L, 3L, 4L));
+	private List<Float> floatListProp = new ArrayList<Float>(Arrays.asList(1.1f, 2.2f, 3.3f, 4.4f));
+	private List<Double> doubleListProp = new ArrayList<Double>(Arrays.asList(1.1, 2.2, 3.3, 4.4));
 }

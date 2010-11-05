@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.slim3.gen.datastore.AbstractDataType;
+import org.slim3.gen.datastore.CollectionType;
 import org.slim3.gen.datastore.CorePrimitiveType;
 import org.slim3.gen.datastore.CoreReferenceType;
 import org.slim3.gen.datastore.DataType;
@@ -169,6 +170,44 @@ public class S3JModelMetaGenerator extends ModelMetaGenerator {
             return null;
         }
 
+        @Override
+        public Void visitCollectionType(CollectionType type, AttributeMetaDesc p)
+        throws RuntimeException {
+            printer.println("if(m.%s() != null){", p.getReadMethodName());
+            printer.indent();
+            type.getElementType().accept(new SimpleDataTypeVisitor<Void, AttributeMetaDesc, RuntimeException>(){
+            	@Override
+            	public Void visitCoreReferenceType(CoreReferenceType type,
+            			AttributeMetaDesc p) throws RuntimeException {
+                	printer.println(
+                            "b.append(\"\\\"%1$s\\\":\");",
+                			p.getName()
+                            );
+                	printer.println("b.append(\"[\");");
+                	printer.println("boolean first = true;");
+            		printer.println("for(Object v : m.%s()){", p.getReadMethodName());
+            		printer.indent();
+                	printer.println("if(first) first = false;");
+                	printer.println("else b.append(\",\");");
+                	printer.println("b.append(v);");
+            		printer.unindent();
+            		printer.println("}");
+                	printer.println("b.append(\"]\");");
+            		return null;
+            	}
+			}, p);
+        	printer.unindent();
+        	printer.println("} else{");
+            printer.indent();
+        	printer.println(
+                    "b.append(\"\\\"%1$s\\\":null\");",
+        			p.getName()
+        			);
+        	printer.unindent();
+        	printer.println("}");
+            return null;
+        }
+
         private final Printer printer;
     }
 
@@ -240,7 +279,7 @@ public class S3JModelMetaGenerator extends ModelMetaGenerator {
         public Void visitCorePrimitiveType(CorePrimitiveType type,
         		AttributeMetaDesc p) throws RuntimeException {
             visitNumberType(type, p, type.getWrapperClassName()
-            		+ classToParseMethod.get(type.getWrapperClassName()));
+            		+ "." + classToParseMethod.get(type.getWrapperClassName()));
         	return null;
         }
 
@@ -276,6 +315,33 @@ public class S3JModelMetaGenerator extends ModelMetaGenerator {
             return null;
         }
 
+        @Override
+        public Void visitCollectionType(CollectionType type, AttributeMetaDesc p)
+        		throws RuntimeException {
+            printer.println("if(map.get(\"%s\") != null){", p.getName());
+            printer.indent();
+            printer.println(
+            		"java.util.List<%s> list = new java.util.ArrayList<%1$s>();"
+            		, type.getElementType().getClassName()
+            		);
+            printer.println("for(Object v : (java.util.List<?>)map.get(\"%s\")){"
+            		, p.getName());
+            printer.indent();
+        	printer.println("list.add(%s.%s(v.toString()));"
+        			, type.getElementType().getClassName()
+        			, classToParseMethod.get(type.getElementType().getClassName())
+        			);
+            printer.unindent();
+        	printer.println("}");
+        	printer.println(
+        			"m.%1$s(list);",
+        			p.getWriteMethodName()
+        			);
+        	printer.unindent();
+        	printer.println("}");
+        	return null;
+        }
+
         private void visitNumberType(AbstractDataType type,
         		AttributeMetaDesc p, String parseMethod){
             printer.println("if(map.get(\"%s\") != null){", p.getName());
@@ -293,12 +359,18 @@ public class S3JModelMetaGenerator extends ModelMetaGenerator {
     }
 
     private static Map<String, String> classToParseMethod = new HashMap<String, String>();
+    private static Map<String, String> classToValueMethod = new HashMap<String, String>();
     static{
-    	classToParseMethod.put("java.lang.Boolean", ".parseBoolean");
-    	classToParseMethod.put("java.lang.Short", ".parseShort");
-    	classToParseMethod.put("java.lang.Integer", ".parseInt");
-    	classToParseMethod.put("java.lang.Long", ".parseLong");
-    	classToParseMethod.put("java.lang.Float", ".parseFloat");
-    	classToParseMethod.put("java.lang.Double", ".parseDouble");
+    	classToParseMethod.put("java.lang.Boolean", "parseBoolean");
+    	classToParseMethod.put("java.lang.Short", "parseShort");
+    	classToParseMethod.put("java.lang.Integer", "parseInt");
+    	classToParseMethod.put("java.lang.Long", "parseLong");
+    	classToParseMethod.put("java.lang.Float", "parseFloat");
+    	classToParseMethod.put("java.lang.Double", "parseDouble");
+    	classToValueMethod.put("java.lang.Short", "shortValue");
+    	classToValueMethod.put("java.lang.Integer", "intValue");
+    	classToValueMethod.put("java.lang.Long", "longValue");
+    	classToValueMethod.put("java.lang.Float", "floatValue");
+    	classToValueMethod.put("java.lang.Double", "doubleValue");
     }
 }
