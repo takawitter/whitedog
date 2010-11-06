@@ -2,7 +2,11 @@ package jp.takawitter.s3j.test.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
@@ -133,6 +137,66 @@ public class TestModel {
 	public void setDoubleListProp(List<Double> doubleListProp) {
 		this.doubleListProp = doubleListProp;
 	}
+	public Set<Short> getShortSetProp() {
+		return shortSetProp;
+	}
+	public void setShortSetProp(Set<Short> shortSetProp) {
+		this.shortSetProp = shortSetProp;
+	}
+	public Set<Integer> getIntegerSetProp() {
+		return integerSetProp;
+	}
+	public void setIntegerSetProp(Set<Integer> integerSetProp) {
+		this.integerSetProp = integerSetProp;
+	}
+	public Set<Long> getLongSetProp() {
+		return longSetProp;
+	}
+	public void setLongSetProp(Set<Long> longSetProp) {
+		this.longSetProp = longSetProp;
+	}
+	public Set<Float> getFloatSetProp() {
+		return floatSetProp;
+	}
+	public void setFloatSetProp(Set<Float> floatSetProp) {
+		this.floatSetProp = floatSetProp;
+	}
+	public Set<Double> getDoubleSetProp() {
+		return doubleSetProp;
+	}
+	public void setDoubleSetProp(Set<Double> doubleSetProp) {
+		this.doubleSetProp = doubleSetProp;
+	}
+	public SortedSet<Short> getShortSortedSetProp() {
+		return shortSortedSetProp;
+	}
+	public void setShortSortedSetProp(SortedSet<Short> shortSortedSetProp) {
+		this.shortSortedSetProp = shortSortedSetProp;
+	}
+	public SortedSet<Integer> getIntegerSortedSetProp() {
+		return integerSortedSetProp;
+	}
+	public void setIntegerSortedSetProp(SortedSet<Integer> integerSortedSetProp) {
+		this.integerSortedSetProp = integerSortedSetProp;
+	}
+	public SortedSet<Long> getLongSortedSetProp() {
+		return longSortedSetProp;
+	}
+	public void setLongSortedSetProp(SortedSet<Long> longSortedSetProp) {
+		this.longSortedSetProp = longSortedSetProp;
+	}
+	public SortedSet<Float> getFloatSortedSetProp() {
+		return floatSortedSetProp;
+	}
+	public void setFloatSortedSetProp(SortedSet<Float> floatSortedSetProp) {
+		this.floatSortedSetProp = floatSortedSetProp;
+	}
+	public SortedSet<Double> getDoubleSortedSetProp() {
+		return doubleSortedSetProp;
+	}
+	public void setDoubleSortedSetProp(SortedSet<Double> doubleSortedSetProp) {
+		this.doubleSortedSetProp = doubleSortedSetProp;
+	}
 
 
 	@Attribute(primaryKey=true)
@@ -157,4 +221,14 @@ public class TestModel {
 	private List<Long> longListProp = new ArrayList<Long>(Arrays.asList(1L, 2L, 3L, 4L));
 	private List<Float> floatListProp = new ArrayList<Float>(Arrays.asList(1.1f, 2.2f, 3.3f, 4.4f));
 	private List<Double> doubleListProp = new ArrayList<Double>(Arrays.asList(1.1, 2.2, 3.3, 4.4));
+	private Set<Short> shortSetProp = new HashSet<Short>(Arrays.asList((short)1, (short)2, (short)3, (short)4));
+	private Set<Integer> integerSetProp = new HashSet<Integer>(Arrays.asList(1, 2, 3, 4));
+	private Set<Long> longSetProp = new HashSet<Long>(Arrays.asList(1L, 2L, 3L, 4L));
+	private Set<Float> floatSetProp = new HashSet<Float>(Arrays.asList(1.1f, 2.2f, 3.3f, 4.4f));
+	private Set<Double> doubleSetProp = new HashSet<Double>(Arrays.asList(1.1, 2.2, 3.3, 4.4));
+	private SortedSet<Short> shortSortedSetProp = new TreeSet<Short>(Arrays.asList((short)1, (short)2, (short)3, (short)4));
+	private SortedSet<Integer> integerSortedSetProp = new TreeSet<Integer>(Arrays.asList(1, 2, 3, 4));
+	private SortedSet<Long> longSortedSetProp = new TreeSet<Long>(Arrays.asList(1L, 2L, 3L, 4L));
+	private SortedSet<Float> floatSortedSetProp = new TreeSet<Float>(Arrays.asList(1.1f, 2.2f, 3.3f, 4.4f));
+	private SortedSet<Double> doubleSortedSetProp = new TreeSet<Double>(Arrays.asList(1.1, 2.2, 3.3, 4.4));
 }

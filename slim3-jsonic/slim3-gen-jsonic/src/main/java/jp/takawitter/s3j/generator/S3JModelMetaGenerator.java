@@ -26,7 +26,10 @@ import org.slim3.gen.datastore.CorePrimitiveType;
 import org.slim3.gen.datastore.CoreReferenceType;
 import org.slim3.gen.datastore.DataType;
 import org.slim3.gen.datastore.KeyType;
+import org.slim3.gen.datastore.ListType;
+import org.slim3.gen.datastore.SetType;
 import org.slim3.gen.datastore.SimpleDataTypeVisitor;
+import org.slim3.gen.datastore.SortedSetType;
 import org.slim3.gen.datastore.StringType;
 import org.slim3.gen.desc.AttributeMetaDesc;
 import org.slim3.gen.desc.ModelMetaDesc;
@@ -316,8 +319,8 @@ public class S3JModelMetaGenerator extends ModelMetaGenerator {
         }
 
         @Override
-        public Void visitCollectionType(CollectionType type, AttributeMetaDesc p)
-        		throws RuntimeException {
+        public Void visitListType(ListType type, AttributeMetaDesc p)
+        throws RuntimeException {
             printer.println("if(map.get(\"%s\") != null){", p.getName());
             printer.indent();
             printer.println(
@@ -335,6 +338,46 @@ public class S3JModelMetaGenerator extends ModelMetaGenerator {
         	printer.println("}");
         	printer.println(
         			"m.%1$s(list);",
+        			p.getWriteMethodName()
+        			);
+        	printer.unindent();
+        	printer.println("}");
+        	return null;
+        }
+
+        @Override
+        public Void visitSortedSetType(SortedSetType type, AttributeMetaDesc p)
+		throws RuntimeException {
+        	return visitSetType(type, p, "java.util.TreeSet");
+        }
+
+        @Override
+        public Void visitSetType(SetType type, AttributeMetaDesc p)
+        throws RuntimeException {
+        	return visitSetType(type, p, "java.util.HashSet");
+        }
+
+        private Void visitSetType(CollectionType type, AttributeMetaDesc p
+        		, String setClass)
+        throws RuntimeException {
+            printer.println("if(map.get(\"%s\") != null){", p.getName());
+            printer.indent();
+            printer.println(
+            		"%s<%s> set = new %1$s<%2$s>();"
+            		, setClass
+            		, type.getElementType().getClassName()
+            		);
+            printer.println("for(Object v : (java.util.List<?>)map.get(\"%s\")){"
+            		, p.getName());
+            printer.indent();
+        	printer.println("set.add(%s.%s(v.toString()));"
+        			, type.getElementType().getClassName()
+        			, classToParseMethod.get(type.getElementType().getClassName())
+        			);
+            printer.unindent();
+        	printer.println("}");
+        	printer.println(
+        			"m.%1$s(set);",
         			p.getWriteMethodName()
         			);
         	printer.unindent();
