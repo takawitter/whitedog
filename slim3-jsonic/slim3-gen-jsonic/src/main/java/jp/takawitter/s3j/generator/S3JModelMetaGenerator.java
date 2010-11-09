@@ -330,10 +330,15 @@ public class S3JModelMetaGenerator extends ModelMetaGenerator {
             printer.println("for(Object v : (java.util.List<?>)map.get(\"%s\")){"
             		, p.getName());
             printer.indent();
-        	printer.println("list.add(%s.%s(v.toString()));"
-        			, type.getElementType().getClassName()
-        			, classToParseMethod.get(type.getElementType().getClassName())
-        			);
+            String parseMethod = classToParseMethod.get(type.getElementType().getClassName());
+            if(parseMethod != null){
+	        	printer.println("list.add(%s.%s(v.toString()));"
+	        			, type.getElementType().getClassName()
+	        			, parseMethod
+	        			);
+            } else{
+	        	printer.println("list.add(v.toString());");            	
+            }
             printer.unindent();
         	printer.println("}");
         	printer.println(
@@ -370,10 +375,15 @@ public class S3JModelMetaGenerator extends ModelMetaGenerator {
             printer.println("for(Object v : (java.util.List<?>)map.get(\"%s\")){"
             		, p.getName());
             printer.indent();
-        	printer.println("set.add(%s.%s(v.toString()));"
-        			, type.getElementType().getClassName()
-        			, classToParseMethod.get(type.getElementType().getClassName())
-        			);
+            String parseMethod = classToParseMethod.get(type.getElementType().getClassName());
+            if(parseMethod != null){
+            	printer.println("set.add(%s.%s(v.toString()));"
+            			, type.getElementType().getClassName()
+	        			, parseMethod
+	        			);
+            } else{
+	        	printer.println("set.add(v.toString());");            	
+            }
             printer.unindent();
         	printer.println("}");
         	printer.println(
