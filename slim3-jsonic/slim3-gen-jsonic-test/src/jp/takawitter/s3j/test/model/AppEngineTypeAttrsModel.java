@@ -73,11 +73,17 @@ public class AppEngineTypeAttrsModel {
 	public void setGeoPtAttr(GeoPt geoPtAttr) {
 		this.geoPtAttr = geoPtAttr;
 	}
-	public IMHandle getImHandleAttr() {
-		return imHandleAttr;
+	public IMHandle getImHandleAttr1() {
+		return imHandleAttr1;
 	}
-	public void setImHandleAttr(IMHandle imHandleAttr) {
-		this.imHandleAttr = imHandleAttr;
+	public void setImHandleAttr1(IMHandle imHandleAttr1) {
+		this.imHandleAttr1 = imHandleAttr1;
+	}
+	public IMHandle getImHandleAttr2() {
+		return imHandleAttr2;
+	}
+	public void setImHandleAttr2(IMHandle imHandleAttr2) {
+		this.imHandleAttr2 = imHandleAttr2;
 	}
 	public Link getLinkAttr() {
 		return linkAttr;
@@ -115,7 +121,8 @@ public class AppEngineTypeAttrsModel {
 	private Text encryptedTextAttr;
 	private Category categoryAttr;
 	private GeoPt geoPtAttr;
-	private IMHandle imHandleAttr;
+	private IMHandle imHandleAttr1;
+	private IMHandle imHandleAttr2;
 	private Link linkAttr;
 	private PhoneNumber phoneNumberAttr;
 	private PostalAddress postalAddressAttr;

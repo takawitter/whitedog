@@ -1,52 +1,88 @@
 package jp.takawitter.s3j.test.model;
 
+import java.net.URL;
+
 import jp.takawitter.s3j.test.meta.AppEngineTypeAttrsModelMeta;
 import net.arnx.jsonic.JSON;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slim3.datastore.Datastore;
 import org.slim3.tester.TestEnvironment;
 
 import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.Category;
+import com.google.appengine.api.datastore.Email;
+import com.google.appengine.api.datastore.GeoPt;
+import com.google.appengine.api.datastore.IMHandle;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Link;
+import com.google.appengine.api.datastore.PhoneNumber;
+import com.google.appengine.api.datastore.PostalAddress;
+import com.google.appengine.api.datastore.Rating;
+import com.google.appengine.api.datastore.ShortBlob;
+import com.google.appengine.api.datastore.Text;
 import com.google.apphosting.api.ApiProxy;
 
 public class AppEngineTypeAttrsModelTest {
 	@Test
 	public void gen() throws Exception{
+		Datastore.setGlobalCipherKey("0654813216578941");
 		ApiProxy.setEnvironmentForCurrentThread(new TestEnvironment(){
 			@Override
 			public String getAppId() {
 				return "slim3-gen";
 			}
 		});
-		AppEngineTypeAttrsModel t = new AppEngineTypeAttrsModel();
-		t.setKey(KeyFactory.createKey("test", 1000));
-		t.setBlobKeyAttr(new BlobKey("AMIfv95A29oaShnIqBEzpYPCwuPThrxXPpyj2snlR-SU8-tmqKSCjvXv8XOh0oMWXzJLbMig81GVIdVjvMnLENdgY1nqMyicj3XPMPrk8HOZxugHzsu64C85sbR0Cq0-C3flit6jl59SzSYQ3PqkweYlb4iWpp0BVw"));
-		t.setCategoryAttr(new Category("partOfSpeech"));
-/*
-		t.setEmailAttr(new Email("takawitter@test.com"));
-		t.setBlobAttr(new Blob("hello".getBytes()));
-		t.setGeoPtAttr(new GeoPt(10, 10));
-		t.setImHandleAttr(new IMHandle(IMHandle.Scheme.xmpp, "handle"));
-		t.setImHandleAttr(new IMHandle(new URL("http://aim.com"), "network"));
-*/
-//		System.out.println(Base64.encode("hello".getBytes()));
-//		t.setShortBlobAttr(new ShortBlob("hello".getBytes()));
+		AppEngineTypeAttrsModel m = new AppEngineTypeAttrsModel();
+		m.setKey(KeyFactory.createKey("test", 1000));
+		m.setBlobKeyAttr(new BlobKey("Q3PqkweYlb4iWpp0BVw"));
+		m.setCategoryAttr(new Category("partOfSpeech"));
+		m.setEmailAttr(new Email("takawitter@test.com"));
+		m.setBlobAttr(new Blob("hello".getBytes()));
+		m.setGeoPtAttr(new GeoPt(10, 10));
+		m.setImHandleAttr1(new IMHandle(IMHandle.Scheme.xmpp, "handle"));
+		m.setImHandleAttr2(new IMHandle(new URL("http://aim.com"), "network"));
+		m.setLinkAttr(new Link("link"));
+		m.setPhoneNumberAttr(new PhoneNumber("000-0000-0000"));
+		m.setPostalAddressAttr(new PostalAddress("address"));
+		m.setRatingAttr(new Rating(70));
+		m.setShortBlobAttr(new ShortBlob("hello".getBytes()));
+		m.setTextAttr(new Text("hello"));
+		m.setEncryptedTextAttr(new Text("hello"));
 
-		String json = AppEngineTypeAttrsModelMeta.get().modelToJson(t);
+		IMHandle h1 = new IMHandle(IMHandle.Scheme.xmpp, "handle");
+		IMHandle h2 = new IMHandle(new URL("http://aim.com"), "network");
+		IMHandle[] hs = {h1, h2};
+		for(IMHandle h : hs){
+			if(h.getProtocol() != null){
+				System.out.println("{\"protocol\":\"" + h.getProtocol() + "\",\"address\":\"" + h.getAddress() + "\"}");
+			} else{
+				System.out.println("address: " + h.getAddress());
+			}
+		}
+		String json = AppEngineTypeAttrsModelMeta.get().modelToJson(m);
 		System.out.println(json);
 		JSON j = new JSON();
 		j.setSuppressNull(true);
-		System.out.println(j.format(t));
+		System.out.println(j.format(m));
 
 		Assert.assertEquals(
 				"{" +
-				"\"blobKeyAttr\":\"AMIfv95A29oaShnIqBEzpYPCwuPThrxXPpyj2snlR-SU8-tmqKSCjvXv8XOh0oMWXzJLbMig81GVIdVjvMnLENdgY1nqMyicj3XPMPrk8HOZxugHzsu64C85sbR0Cq0-C3flit6jl59SzSYQ3PqkweYlb4iWpp0BVw\"" +
-				",\"categoryAttr\":\"partOfSpeech\"" +
+				"\"blobAttr\":\"aGVsbG8=\"" +
+				",\"blobKeyAttr\":\"Q3PqkweYlb4iWpp0BVw\",\"categoryAttr\":\"partOfSpeech\"" +
+				",\"emailAttr\":\"takawitter@test.com\"" +
+				",\"encryptedTextAttr\":\"eeRXmeJQOo8HbwTHJ+R+WQ==\"" +
+				",\"geoPtAttr\":{\"latitude\":10.0,\"longitude\":10.0}" +
+				",\"imHandleAttr1\":{\"address\":\"handle\",\"protocol\":\"xmpp\"}" +
+				",\"imHandleAttr2\":{\"address\":\"network\",\"protocol\":\"http://aim.com\"}" +
 				",\"key\":\"aglzbGltMy1nZW5yCwsSBHRlc3QY6AcM\"" +
+				",\"linkAttr\":\"link\",\"phoneNumberAttr\":\"000-0000-0000\"" +
+				",\"postalAddressAttr\":\"address\",\"ratingAttr\":70" +
+				",\"shortBlobAttr\":\"aGVsbG8=\"" +
+				",\"textAttr\":\"hello\"" +
 				"}"
 				, json
 				);
