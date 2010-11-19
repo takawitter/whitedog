@@ -16,6 +16,7 @@ import com.google.appengine.api.datastore.PostalAddress;
 import com.google.appengine.api.datastore.Rating;
 import com.google.appengine.api.datastore.ShortBlob;
 import com.google.appengine.api.datastore.Text;
+import com.google.appengine.api.users.User;
 
 @Model
 public class AppEngineTypeAttrsModel {
@@ -109,6 +110,24 @@ public class AppEngineTypeAttrsModel {
 	public void setRatingAttr(Rating ratingAttr) {
 		this.ratingAttr = ratingAttr;
 	}
+	public User getUser1() {
+		return user1;
+	}
+	public void setUser1(User user1) {
+		this.user1 = user1;
+	}
+	public User getUser2() {
+		return user2;
+	}
+	public void setUser2(User user2) {
+		this.user2 = user2;
+	}
+	public User getUser3() {
+		return user3;
+	}
+	public void setUser3(User user3) {
+		this.user3 = user3;
+	}
 
 	@Attribute(primaryKey=true)
 	private Key key;
@@ -127,4 +146,7 @@ public class AppEngineTypeAttrsModel {
 	private PhoneNumber phoneNumberAttr;
 	private PostalAddress postalAddressAttr;
 	private Rating ratingAttr;
+	private User user1;
+	private User user2;
+	private User user3;
 }

@@ -23,6 +23,7 @@ import com.google.appengine.api.datastore.PostalAddress;
 import com.google.appengine.api.datastore.Rating;
 import com.google.appengine.api.datastore.ShortBlob;
 import com.google.appengine.api.datastore.Text;
+import com.google.appengine.api.users.User;
 import com.google.apphosting.api.ApiProxy;
 
 public class AppEngineTypeListAttrsModelTest {
@@ -66,12 +67,17 @@ public class AppEngineTypeListAttrsModelTest {
 		m.setTextListAttr(Arrays.asList(
 				new Text("hello"), new Text("world")
 				));
+		m.setUserListAttr(Arrays.asList(
+				new User("email", "authDomain"), new User("email", "authDomain", "userId")
+				, new User("email", "authDomain", "userId", "federatedId")
+				));
 
 		String json = AppEngineTypeListAttrsModelMeta.get().modelToJson(m);
 		System.out.println(json);
 		JSON j = new JSON();
 		j.setSuppressNull(true);
 		System.out.println(j.format(m));
+		JSON.decode(json);
 
 		Assert.assertEquals(
 				"{\"blobKeyListAttr\":[\"lkwejl2k3jrksl\",\"kaekl23joij\"]" +
@@ -91,7 +97,12 @@ public class AppEngineTypeListAttrsModelTest {
 				",\"postalAddressListAttr\":[\"111-1111\",\"222-2222\"]" +
 				",\"ratingListAttr\":[80,90]" +
 				",\"shortBlobListAttr\":[\"aGVsbG8=\",\"d29ybGQ=\"]" +
-				",\"textListAttr\":[\"hello\",\"world\"]}"
+				",\"textListAttr\":[\"hello\",\"world\"]" +
+				",\"userListAttr\":[{\"authDomain\":\"authDomain\",\"email\":\"email\"}" +
+					",{\"authDomain\":\"authDomain\",\"email\":\"email\",\"userId\":\"userId\"}" +
+					",{\"authDomain\":\"authDomain\",\"email\":\"email\"" +
+						",\"federatedIdentity\":\"federatedId\",\"userId\":\"userId\"}]" +
+				"}"
 				, json);
 	}
 

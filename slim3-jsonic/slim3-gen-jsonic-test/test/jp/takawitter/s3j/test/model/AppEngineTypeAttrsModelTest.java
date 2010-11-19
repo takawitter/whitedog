@@ -1,5 +1,9 @@
 package jp.takawitter.s3j.test.model;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 import java.net.URL;
 
 import jp.takawitter.s3j.test.meta.AppEngineTypeAttrsModelMeta;
@@ -24,6 +28,7 @@ import com.google.appengine.api.datastore.PostalAddress;
 import com.google.appengine.api.datastore.Rating;
 import com.google.appengine.api.datastore.ShortBlob;
 import com.google.appengine.api.datastore.Text;
+import com.google.appengine.api.users.User;
 import com.google.apphosting.api.ApiProxy;
 
 public class AppEngineTypeAttrsModelTest {
@@ -52,24 +57,17 @@ public class AppEngineTypeAttrsModelTest {
 		m.setShortBlobAttr(new ShortBlob("hello".getBytes()));
 		m.setTextAttr(new Text("hello"));
 		m.setEncryptedTextAttr(new Text("hello"));
+		m.setUser1(new User("user@test.com", "authDomain"));
+		m.setUser2(new User("user@test.com", "authDomain", "userId"));
+		m.setUser3(new User("user@test.com", "authDomain", "userId", "federatedId"));
 
-		IMHandle h1 = new IMHandle(IMHandle.Scheme.xmpp, "handle");
-		IMHandle h2 = new IMHandle(new URL("http://aim.com"), "network");
-		IMHandle[] hs = {h1, h2};
-		for(IMHandle h : hs){
-			if(h.getProtocol() != null){
-				System.out.println("{\"protocol\":\"" + h.getProtocol() + "\",\"address\":\"" + h.getAddress() + "\"}");
-			} else{
-				System.out.println("address: " + h.getAddress());
-			}
-		}
 		String json = AppEngineTypeAttrsModelMeta.get().modelToJson(m);
 		System.out.println(json);
 		JSON j = new JSON();
 		j.setSuppressNull(true);
 		System.out.println(j.format(m));
 
-		Assert.assertEquals(
+		assertEquals(
 				"{" +
 				"\"blobAttr\":\"aGVsbG8=\"" +
 				",\"blobKeyAttr\":\"Q3PqkweYlb4iWpp0BVw\",\"categoryAttr\":\"partOfSpeech\"" +
@@ -83,6 +81,9 @@ public class AppEngineTypeAttrsModelTest {
 				",\"postalAddressAttr\":\"address\",\"ratingAttr\":70" +
 				",\"shortBlobAttr\":\"aGVsbG8=\"" +
 				",\"textAttr\":\"hello\"" +
+				",\"user1\":{\"authDomain\":\"authDomain\",\"email\":\"user@test.com\"}" +
+				",\"user2\":{\"authDomain\":\"authDomain\",\"email\":\"user@test.com\",\"userId\":\"userId\"}" +
+				",\"user3\":{\"authDomain\":\"authDomain\",\"email\":\"user@test.com\",\"federatedIdentity\":\"federatedId\",\"userId\":\"userId\"}" +
 				"}"
 				, json
 				);
@@ -90,9 +91,99 @@ public class AppEngineTypeAttrsModelTest {
 
 	@Test
 	public void gen_null(){
-		AppEngineTypeAttrsModel t = new AppEngineTypeAttrsModel();
-		String json = AppEngineTypeAttrsModelMeta.get().modelToJson(t);
-		Assert.assertEquals("{}", json);
+		AppEngineTypeAttrsModel m = new AppEngineTypeAttrsModel();
+		String json = AppEngineTypeAttrsModelMeta.get().modelToJson(m);
+		assertEquals("{}", json);
+	}
+
+	@Test
+	public void nullBlob(){
+		AppEngineTypeAttrsModel m = new AppEngineTypeAttrsModel();
+		m.setBlobAttr(new Blob(null));
+		String json = AppEngineTypeAttrsModelMeta.get().modelToJson(m);
+		assertEquals("{}", json);
+	}
+
+	@Test
+	public void nullText(){
+		AppEngineTypeAttrsModel m = new AppEngineTypeAttrsModel();
+		m.setTextAttr(new Text(null));
+		String json = AppEngineTypeAttrsModelMeta.get().modelToJson(m);
+		assertEquals("{}", json);
+	}
+
+	@Test
+	public void nullCheck(){
+		assertNull(new Blob(null).getBytes());
+		try{
+			new BlobKey(null);
+			fail();
+		} catch(IllegalArgumentException e){
+		}
+		try{
+			new Category(null);
+			fail();
+		} catch(NullPointerException e){
+		}
+		try{
+			new Email(null);
+			fail();
+		} catch(NullPointerException e){
+		}
+		// GeoPt
+		try{
+			new IMHandle((URL)null, null);
+			fail();
+		} catch(NullPointerException e){
+		}
+		try{
+			new IMHandle((IMHandle.Scheme)null, null);
+			fail();
+		} catch(NullPointerException e){
+		}
+		try{
+			new PhoneNumber(null);
+			fail();
+		} catch(NullPointerException e){
+		}
+		try{
+			new PostalAddress(null);
+			fail();
+		} catch(NullPointerException e){
+		}
+		try{
+			new ShortBlob(null);
+			fail();
+		} catch(NullPointerException e){
+		}
+		Assert.assertNull(new Text(null).getValue());
+		try{
+			new User(null, null);
+			fail();
+		} catch(NullPointerException e){
+		}
+		try{
+			new User(null, null, null);
+			fail();
+		} catch(NullPointerException e){
+		}
+		try{
+			new User(null, null, null, null);
+			fail();
+		} catch(NullPointerException e){
+		}
+	}
+
+	@Test
+	public void imHandle() throws Exception{
+		IMHandle h1 = new IMHandle(IMHandle.Scheme.xmpp, "handle");
+		IMHandle h2 = new IMHandle(new URL("http://aim.com"), "network");
+		IMHandle[] hs = {h1, h2};
+		for(IMHandle h : hs){
+			Assert.assertNotNull(h.getProtocol());
+			Assert.assertNotNull(h.getAddress());
+			System.out.println("{\"protocol\":\"" + h.getProtocol() + "\",\"address\":\"" + h.getAddress() + "\"}");
+		}
 	}
 
 	@Test

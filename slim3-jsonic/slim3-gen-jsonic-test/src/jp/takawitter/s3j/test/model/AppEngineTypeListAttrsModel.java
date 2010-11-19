@@ -18,6 +18,7 @@ import com.google.appengine.api.datastore.PostalAddress;
 import com.google.appengine.api.datastore.Rating;
 import com.google.appengine.api.datastore.ShortBlob;
 import com.google.appengine.api.datastore.Text;
+import com.google.appengine.api.users.User;
 
 @Model
 public class AppEngineTypeListAttrsModel {
@@ -105,6 +106,12 @@ public class AppEngineTypeListAttrsModel {
 	public void setEmailListAttr(List<Email> emailListAttr) {
 		this.emailListAttr = emailListAttr;
 	}
+	public List<User> getUserListAttr() {
+		return userListAttr;
+	}
+	public void setUserListAttr(List<User> userListAttr) {
+		this.userListAttr = userListAttr;
+	}
 
 	@Attribute(primaryKey=true)
 	private Key key;
@@ -121,4 +128,5 @@ public class AppEngineTypeListAttrsModel {
 	private List<PostalAddress> postalAddressListAttr;
 	private List<Rating> ratingListAttr;
 	private List<Email> emailListAttr;
+	private List<User> userListAttr;
 }

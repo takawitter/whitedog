@@ -6,9 +6,11 @@ import net.arnx.jsonic.JSON;
 
 import org.junit.Test;
 
+import com.google.appengine.repackaged.org.json.JSONObject;
+
 public class PrimitiveAttrsModelTest {
 	@Test
-	public void gen() throws Exception{
+	public void modelToJson() throws Exception{
 		PrimitiveAttrsModel m = new PrimitiveAttrsModel();
 		m.setBooleanAttr(true);
 		m.setShortAttr((short)100);
@@ -27,5 +29,21 @@ public class PrimitiveAttrsModelTest {
 				",\"longAttr\":10000,\"shortAttr\":100}"
 				, json
 				);
+	}
+
+	@Test
+	public void jsonToModel() throws Exception{
+		PrimitiveAttrsModel m = new PrimitiveAttrsModel();
+		JSONObject jobj = new JSONObject(
+				"{\"booleanAttr\":true,\"doubleAttr\":11.1" +
+				",\"floatAttr\":1.1,\"intAttr\":1000" +
+				",\"longAttr\":10000,\"shortAttr\":100}"
+				);
+		m.setBooleanAttr(jobj.getBoolean("booleanAttr"));
+		m.setShortAttr((short)jobj.getInt("shortAttr"));
+		m.setIntAttr(jobj.getInt("intAttr"));
+		m.setLongAttr(jobj.getInt("longAttr"));
+		m.setFloatAttr((float)jobj.getDouble("floatAttr"));
+		m.setDoubleAttr(jobj.getDouble("doubleAttr"));
 	}
 }
