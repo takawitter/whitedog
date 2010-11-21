@@ -92,6 +92,9 @@ public class AppEngineTypeListAttrsModelTest {
 				"{\"address\":\"address\",\"protocol\":\"xmpp\"}" +
 				",{\"address\":\"address\",\"protocol\":\"http://test\"}" +
 				"]" +
+				",\"keyListAttr\":[" +
+				"\"aglzbGltMy1nZW5yDgsSBGtpbmQiBG5hbWUM\",\"aglzbGltMy1nZW5yCgsSBGtpbmQYAQw\"" +
+				"]" +
 				",\"linkListAttr\":[\"link\",\"external\"]" +
 				",\"phoneNumberListAttr\":[\"000-0000-0000\",\"111-1111-1111\"]" +
 				",\"postalAddressListAttr\":[\"111-1111\",\"222-2222\"]" +
