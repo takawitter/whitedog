@@ -52,10 +52,10 @@ public class PrimitiveAttrsModel {
 
 	@Attribute(primaryKey=true)
 	private Key key;
-	private boolean booleanAttr = true;
-	private short shortAttr = 10;
-	private int intAttr = 100;
-	private long longAttr = 10000;
-	private float floatAttr = 10.2f;
-	private double doubleAttr = 123.45;
+	private boolean booleanAttr;
+	private short shortAttr;
+	private int intAttr;
+	private long longAttr;
+	private float floatAttr;
+	private double doubleAttr;
 }

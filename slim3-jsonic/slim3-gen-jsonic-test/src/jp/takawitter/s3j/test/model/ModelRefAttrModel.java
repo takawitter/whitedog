@@ -1,5 +1,8 @@
 package jp.takawitter.s3j.test.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jp.takawitter.s3j.test.meta.ModelRefAttrModelMeta;
 
 import org.slim3.datastore.Attribute;
@@ -32,9 +35,16 @@ public class ModelRefAttrModel {
 	public ModelRef<ModelRefAttrModel> getRef() {
 		return ref;
 	}
+	public List<ModelRef<ModelRefAttrModel>> getRefList() {
+		return refList;
+	}
+	public void setRefList(List<ModelRef<ModelRefAttrModel>> refList) {
+		this.refList = refList;
+	}
 
 	@Attribute(primaryKey=true)
 	private Key key;
 	private String name;
 	private ModelRef<ModelRefAttrModel> ref = new ModelRef<ModelRefAttrModel>(ModelRefAttrModel.class);
+	private List<ModelRef<ModelRefAttrModel>> refList = new ArrayList<ModelRef<ModelRefAttrModel>>();
 }
