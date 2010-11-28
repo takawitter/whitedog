@@ -1,14 +1,14 @@
 package jp.takawitter.s3j.test.model;
 
 import jp.takawitter.s3j.test.meta.WrapperAttrsModelMeta;
-import junit.framework.Assert;
 import net.arnx.jsonic.JSON;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class WrapperAttrsModelTest {
 	@Test
-	public void gen() throws Exception{
+	public void modelToJson() throws Exception{
 		WrapperAttrsModel m = new WrapperAttrsModel();
 		m.setBooleanAttr(true);
 		m.setShortAttr((short)100);
@@ -30,17 +30,38 @@ public class WrapperAttrsModelTest {
 	}
 
 	@Test
-	public void gen_null() throws Exception{
+	public void modelToJson_null() throws Exception{
 		WrapperAttrsModel m = new WrapperAttrsModel();
 		String json = WrapperAttrsModelMeta.get().modelToJson(m);
 		Assert.assertEquals("{}", json);
 	}
 
 	@Test
-	public void gen_short() throws Exception{
+	public void modelToJson_short() throws Exception{
 		WrapperAttrsModel m = new WrapperAttrsModel();
 		m.setShortAttr((short)1);
 		String json = WrapperAttrsModelMeta.get().modelToJson(m);
 		Assert.assertEquals("{\"shortAttr\":1}", json);
+	}
+
+	@Test
+	public void jsonToModel(){
+		WrapperAttrsModel m = WrapperAttrsModelMeta.get().jsonToModel(
+			"{\"booleanAttr\":true,\"doubleAttr\":11.1" +
+			",\"floatAttr\":1.1,\"integerAttr\":1000" +
+			",\"longAttr\":10000,\"shortAttr\":100}");
+		Assert.assertEquals(true, m.getBooleanAttr());
+		Assert.assertEquals(11.1, m.getDoubleAttr(), 0.1);
+		Assert.assertEquals(1.1, m.getFloatAttr(), 0.1);
+		Assert.assertEquals((Integer)1000, m.getIntegerAttr());
+		Assert.assertEquals((Long)10000L, m.getLongAttr());
+		Assert.assertEquals((Short)(short)100, m.getShortAttr());
+	}
+
+	@Test
+	public void jsonToModel_notLong(){
+		WrapperAttrsModel m = WrapperAttrsModelMeta.get().jsonToModel(
+			"{\"longAttr\":true}");
+		Assert.assertNull(m.getLongAttr());
 	}
 }
