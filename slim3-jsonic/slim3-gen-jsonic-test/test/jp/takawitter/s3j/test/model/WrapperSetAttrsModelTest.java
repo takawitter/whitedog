@@ -4,14 +4,14 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import jp.takawitter.s3j.test.meta.WrapperSetAttrsModelMeta;
-import junit.framework.Assert;
 import net.arnx.jsonic.JSON;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class WrapperSetAttrsModelTest {
 	@Test
-	public void gen(){
+	public void modelToJson(){
 		WrapperSetAttrsModelMeta m = WrapperSetAttrsModelMeta.get();
 		WrapperSetAttrsModel model = new WrapperSetAttrsModel();
 		model.setBooleanSetAttr(new HashSet<Boolean>(Arrays.asList(true,false,true)));
@@ -35,9 +35,36 @@ public class WrapperSetAttrsModelTest {
 	}
 
 	@Test
-	public void gen_null() throws Exception{
+	public void modelToJson_null() throws Exception{
 		WrapperSetAttrsModel m = new WrapperSetAttrsModel();
 		String json = WrapperSetAttrsModelMeta.get().modelToJson(m);
 		Assert.assertEquals("{}", json);
+	}
+
+	@Test
+	public void jsonToModel() throws Exception{
+		WrapperSetAttrsModel m = WrapperSetAttrsModelMeta.get().jsonToModel(
+				"{\"booleanSetAttr\":[true,false,true],\"doubleSetAttr\":[9.9,8.8,7.7]" +
+				",\"floatSetAttr\":[9.9,8.8,7.7]" +
+				",\"integerSetAttr\":[9,8,7],\"longSetAttr\":[9,8,7]" +
+				",\"shortSetAttr\":[9,8,7]}");
+		Assert.assertArrayEquals(
+				new HashSet<Boolean>(Arrays.asList(true, false, true)).toArray()
+				, m.getBooleanSetAttr().toArray());
+		Assert.assertArrayEquals(
+				new HashSet<Double>(Arrays.asList(9.9, 8.8, 7.7)).toArray()
+				, m.getDoubleSetAttr().toArray());
+		Assert.assertArrayEquals(
+				new HashSet<Float>(Arrays.asList(9.9f, 8.8f, 7.7f)).toArray()
+				, m.getFloatSetAttr().toArray());
+		Assert.assertArrayEquals(
+				new HashSet<Integer>(Arrays.asList(9, 8, 7)).toArray()
+				, m.getIntegerSetAttr().toArray());
+		Assert.assertArrayEquals(
+				new HashSet<Long>(Arrays.asList(9L, 8L, 7L)).toArray()
+				, m.getLongSetAttr().toArray());
+		Assert.assertArrayEquals(
+				new HashSet<Short>(Arrays.asList((short)9, (short)8, (short)7)).toArray()
+				, m.getShortSetAttr().toArray());
 	}
 }

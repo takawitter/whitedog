@@ -4,14 +4,14 @@ import java.util.Arrays;
 import java.util.TreeSet;
 
 import jp.takawitter.s3j.test.meta.WrapperSortedSetAttrsModelMeta;
-import junit.framework.Assert;
 import net.arnx.jsonic.JSON;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class WrapperSortedSetAttrsModelTest {
 	@Test
-	public void gen(){
+	public void modelToJson(){
 		WrapperSortedSetAttrsModelMeta m = WrapperSortedSetAttrsModelMeta.get();
 		WrapperSortedSetAttrsModel model = new WrapperSortedSetAttrsModel();
 		model.setBooleanSortedSetAttr(new TreeSet<Boolean>(Arrays.asList(true,false,true)));
@@ -35,9 +35,38 @@ public class WrapperSortedSetAttrsModelTest {
 	}
 
 	@Test
-	public void gen_null() throws Exception{
+	public void modelToJson_null() throws Exception{
 		WrapperSortedSetAttrsModel m = new WrapperSortedSetAttrsModel();
 		String json = WrapperSortedSetAttrsModelMeta.get().modelToJson(m);
 		Assert.assertEquals("{}", json);
+	}
+
+	@Test
+	public void jsonToModel() throws Exception{
+		WrapperSortedSetAttrsModel m = WrapperSortedSetAttrsModelMeta.get().jsonToModel(
+				"{\"booleanSortedSetAttr\":[true,false,true]" +
+				",\"doubleSortedSetAttr\":[9.9,8.8,7.7]" +
+				",\"floatSortedSetAttr\":[9.9,8.8,7.7]" +
+				",\"integerSortedSetAttr\":[9,8,7]" +
+				",\"longSortedSetAttr\":[9,8,7]" +
+				",\"shortSortedSetAttr\":[9,8,7]}");
+		Assert.assertArrayEquals(
+				new TreeSet<Boolean>(Arrays.asList(true, false, true)).toArray()
+				, m.getBooleanSortedSetAttr().toArray());
+		Assert.assertArrayEquals(
+				new TreeSet<Double>(Arrays.asList(9.9, 8.8, 7.7)).toArray()
+				, m.getDoubleSortedSetAttr().toArray());
+		Assert.assertArrayEquals(
+				new TreeSet<Float>(Arrays.asList(9.9f, 8.8f, 7.7f)).toArray()
+				, m.getFloatSortedSetAttr().toArray());
+		Assert.assertArrayEquals(
+				new TreeSet<Integer>(Arrays.asList(9, 8, 7)).toArray()
+				, m.getIntegerSortedSetAttr().toArray());
+		Assert.assertArrayEquals(
+				new TreeSet<Long>(Arrays.asList(9L, 8L, 7L)).toArray()
+				, m.getLongSortedSetAttr().toArray());
+		Assert.assertArrayEquals(
+				new TreeSet<Short>(Arrays.asList((short)9, (short)8, (short)7)).toArray()
+				, m.getShortSortedSetAttr().toArray());
 	}
 }

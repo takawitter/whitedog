@@ -3,8 +3,8 @@ package jp.takawitter.s3j.test.model;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
-import jp.takawitter.s3j.test.meta.OtherJavaTypeAttrsModelMeta;
 import jp.takawitter.s3j.test.meta.OtherJavaTypeListAttrsModelMeta;
 import jp.takawitter.s3j.test.model.OtherJavaTypeListAttrsModel.WeekDay;
 import net.arnx.jsonic.JSON;
@@ -15,7 +15,7 @@ import org.slim3.datastore.Datastore;
 
 public class OtherJavaTypeListAttrsModelTest {
 	@Test
-	public void gen() throws Exception{
+	public void modelToJson() throws Exception{
 		Datastore.setGlobalCipherKey("0654813216578941");
 		OtherJavaTypeListAttrsModel m = new OtherJavaTypeListAttrsModel();
 		m.setStringListAttr(Arrays.asList("hello", "world"));
@@ -41,9 +41,27 @@ public class OtherJavaTypeListAttrsModelTest {
 	}
 
 	@Test
-	public void gen_null(){
-		OtherJavaTypeAttrsModel t = new OtherJavaTypeAttrsModel();
-		String json = OtherJavaTypeAttrsModelMeta.get().modelToJson(t);
+	public void modelToJson_null(){
+		OtherJavaTypeListAttrsModel t = new OtherJavaTypeListAttrsModel();
+		String json = OtherJavaTypeListAttrsModelMeta.get().modelToJson(t);
 		Assert.assertEquals("{}", json);
+	}
+
+	@Test
+	public void jsonToModel(){
+		OtherJavaTypeListAttrsModel m = OtherJavaTypeListAttrsModelMeta.get().jsonToModel(
+			"{\"dateListAttr\":[1289441471000,1292080332000]" +
+			",\"enumListAttr\":[\"Sun\",\"Mon\",\"Tue\"]" +
+			",\"stringListAttr\":[\"hello\",\"world\"]}"
+			);
+		Assert.assertArrayEquals(
+				Arrays.asList(new Date(1289441471000L), new Date(1292080332000L)).toArray()
+				, m.getDateListAttr().toArray());
+		Assert.assertArrayEquals(
+				Arrays.asList(WeekDay.Sun, WeekDay.Mon, WeekDay.Tue).toArray()
+				, m.getEnumListAttr().toArray());
+		Assert.assertArrayEquals(
+				Arrays.asList("hello", "world").toArray()
+				, m.getStringListAttr().toArray());
 	}
 }

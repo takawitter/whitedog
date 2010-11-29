@@ -3,14 +3,14 @@ package jp.takawitter.s3j.test.model;
 import java.util.Arrays;
 
 import jp.takawitter.s3j.test.meta.WrapperListAttrsModelMeta;
-import junit.framework.Assert;
 import net.arnx.jsonic.JSON;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class WrapperListAttrsModelTest {
 	@Test
-	public void gen(){
+	public void modelToJson(){
 		WrapperListAttrsModelMeta m = WrapperListAttrsModelMeta.get();
 		WrapperListAttrsModel model = new WrapperListAttrsModel();
 		model.setBooleanListAttr(Arrays.asList(true, false, true));
@@ -32,9 +32,45 @@ public class WrapperListAttrsModelTest {
 	}
 
 	@Test
-	public void gen_null() throws Exception{
+	public void modelToJson_null() throws Exception{
 		WrapperListAttrsModel m = new WrapperListAttrsModel();
 		String json = WrapperListAttrsModelMeta.get().modelToJson(m);
 		Assert.assertEquals("{}", json);
+	}
+
+	@Test
+	public void jsonToModel() throws Exception{
+		WrapperListAttrsModel m = WrapperListAttrsModelMeta.get().jsonToModel(
+				"{\"booleanListAttr\":[true,false,true],\"doubleListAttr\":[9.9,8.8,7.7]" +
+				",\"floatListAttr\":[9.9,8.8,7.7]" +
+				",\"integerListAttr\":[9,8,7],\"longListAttr\":[9,8,7]" +
+				",\"shortListAttr\":[9,8,7]}");
+		Assert.assertArrayEquals(
+				Arrays.asList(true, false, true).toArray()
+				, m.getBooleanListAttr().toArray());
+		Assert.assertArrayEquals(
+				Arrays.asList(9.9, 8.8, 7.7).toArray()
+				, m.getDoubleListAttr().toArray());
+		Assert.assertArrayEquals(
+				Arrays.asList(9.9f, 8.8f, 7.7f).toArray()
+				, m.getFloatListAttr().toArray());
+		Assert.assertArrayEquals(
+				Arrays.asList(9, 8, 7).toArray()
+				, m.getIntegerListAttr().toArray());
+		Assert.assertArrayEquals(
+				Arrays.asList(9L, 8L, 7L).toArray()
+				, m.getLongListAttr().toArray());
+		Assert.assertArrayEquals(
+				Arrays.asList((short)9, (short)8, (short)7).toArray()
+				, m.getShortListAttr().toArray());
+	}
+
+	@Test
+	public void jsonToModel_invalidValue() throws Exception{
+		WrapperListAttrsModel m = WrapperListAttrsModelMeta.get().jsonToModel(
+				"{\"integerListAttr\":[1,\"hello\",100]}");
+		Assert.assertEquals(2, m.getIntegerListAttr().size());
+		Assert.assertEquals(1, (int)m.getIntegerListAttr().get(0));
+		Assert.assertEquals(100, (int)m.getIntegerListAttr().get(1));
 	}
 }
