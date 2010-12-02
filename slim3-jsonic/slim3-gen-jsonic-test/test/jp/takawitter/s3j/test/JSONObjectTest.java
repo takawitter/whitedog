@@ -1,8 +1,15 @@
 package jp.takawitter.s3j.test;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.appengine.api.datastore.IMHandle;
+import com.google.appengine.api.users.User;
+import com.google.appengine.repackaged.com.google.common.util.Base64;
+import com.google.appengine.repackaged.com.google.common.util.Base64DecoderException;
 import com.google.appengine.repackaged.org.json.JSONArray;
 import com.google.appengine.repackaged.org.json.JSONException;
 import com.google.appengine.repackaged.org.json.JSONObject;
@@ -72,4 +79,83 @@ public class JSONObjectTest {
 		Assert.assertEquals("2", array.getString(1));
 		Assert.assertEquals("3", array.getString(2));
 	}
+
+	@Test
+	public void blobTest() throws Exception{
+		JSONObject j = new JSONObject("{\"blobAttr\":\"aGVsbG8=\"}");
+		Assert.assertArrayEquals("hello".getBytes(), Base64.decode(j.getString("blobAttr")));
+		try{
+			Base64.decode("hello");
+			Assert.fail();
+		} catch(Base64DecoderException e){
+			
+		}
+	}
+
+	@Test
+	public void imHandle() throws Exception{
+		JSONObject j = new JSONObject("{" +
+				"\"imHandleAttr1\":{\"address\":\"handle\",\"protocol\":\"xmpp\"}" +
+				",\"imHandleAttr2\":{\"address\":\"network\",\"protocol\":\"http://aim.com\"}" +
+				"}");
+		JSONObject h = j.getJSONObject("imHandleAttr1");
+		IMHandle i = null;
+		IMHandle.Scheme s = null;
+		URL u = null;
+		try{
+			s = IMHandle.Scheme.valueOf(h.getString("protocol"));
+		} catch(IllegalArgumentException e){
+			try{
+				u = new URL(h.getString("protocol"));
+			} catch(MalformedURLException ex){
+			}
+		}
+		if(s != null){
+			i = new IMHandle(s, h.getString("address"));
+		} else if(u != null){
+			i = new IMHandle(u, h.getString("address"));
+		}
+		Assert.assertEquals("handle", i.getAddress());
+		Assert.assertEquals(IMHandle.Scheme.xmpp.name(), i.getProtocol());
+	}
+
+	@Test
+	public void user() throws Exception{
+		JSONObject j = new JSONObject("{" +
+				"\"user1\":{\"authDomain\":\"authDomain\",\"email\":\"user@test.com\"}" +
+				"}");
+		Assert.assertEquals("", j.optString("name"));
+		Assert.assertNull(j.optString("name", null));
+		JSONObject u = j.getJSONObject("user1");
+		String domain = u.optString("authDomain", null);
+		String email = u.optString("email", null);
+		String uid = u.optString("userid", null);
+		String fid = u.optString("federatedIdentity");
+		if(domain != null && email != null){
+			if(uid == null){
+				new User(email, domain);
+			} else if(fid == null){
+				new User(email, domain, uid);
+			} else{
+				new User(email, domain, uid, fid);
+			}
+		}
+	}
+/*
+	"\"blobAttr\":\"aGVsbG8=\"" +
+	",\"blobKeyAttr\":\"Q3PqkweYlb4iWpp0BVw\",\"categoryAttr\":\"partOfSpeech\"" +
+	",\"emailAttr\":\"takawitter@test.com\"" +
+	",\"encryptedTextAttr\":\"eeRXmeJQOo8HbwTHJ+R+WQ==\"" +
+	",\"geoPtAttr\":{\"latitude\":10.0,\"longitude\":10.0}" +
+	",\"imHandleAttr1\":{\"address\":\"handle\",\"protocol\":\"xmpp\"}" +
+	",\"imHandleAttr2\":{\"address\":\"network\",\"protocol\":\"http://aim.com\"}" +
+	",\"key\":\"aglzbGltMy1nZW5yCwsSBHRlc3QY6AcM\"" +
+	",\"linkAttr\":\"link\",\"phoneNumberAttr\":\"000-0000-0000\"" +
+	",\"postalAddressAttr\":\"address\",\"ratingAttr\":70" +
+	",\"shortBlobAttr\":\"aGVsbG8=\"" +
+	",\"textAttr\":\"hello\"" +
+	",\"user1\":{\"authDomain\":\"authDomain\",\"email\":\"user@test.com\"}" +
+	",\"user2\":{\"authDomain\":\"authDomain\",\"email\":\"user@test.com\",\"userId\":\"userId\"}" +
+	",\"user3\":{\"authDomain\":\"authDomain\",\"email\":\"user@test.com\",\"federatedIdentity\":\"federatedId\",\"userId\":\"userId\"}" +
+*/	
 }

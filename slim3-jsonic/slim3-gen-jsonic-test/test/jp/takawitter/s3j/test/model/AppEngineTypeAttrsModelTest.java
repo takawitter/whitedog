@@ -33,7 +33,7 @@ import com.google.apphosting.api.ApiProxy;
 
 public class AppEngineTypeAttrsModelTest {
 	@Test
-	public void gen() throws Exception{
+	public void modelToJson() throws Exception{
 		Datastore.setGlobalCipherKey("0654813216578941");
 		ApiProxy.setEnvironmentForCurrentThread(new TestEnvironment(){
 			@Override
@@ -90,14 +90,14 @@ public class AppEngineTypeAttrsModelTest {
 	}
 
 	@Test
-	public void gen_null(){
+	public void modelToJson_null(){
 		AppEngineTypeAttrsModel m = new AppEngineTypeAttrsModel();
 		String json = AppEngineTypeAttrsModelMeta.get().modelToJson(m);
 		assertEquals("{}", json);
 	}
 
 	@Test
-	public void nullBlob(){
+	public void modelToJson_nullBlob(){
 		AppEngineTypeAttrsModel m = new AppEngineTypeAttrsModel();
 		m.setBlobAttr(new Blob(null));
 		String json = AppEngineTypeAttrsModelMeta.get().modelToJson(m);
@@ -105,11 +105,65 @@ public class AppEngineTypeAttrsModelTest {
 	}
 
 	@Test
-	public void nullText(){
+	public void modelToJson_nullText(){
 		AppEngineTypeAttrsModel m = new AppEngineTypeAttrsModel();
 		m.setTextAttr(new Text(null));
 		String json = AppEngineTypeAttrsModelMeta.get().modelToJson(m);
 		assertEquals("{}", json);
+	}
+
+	@Test
+	public void jsonToModel(){
+		Datastore.setGlobalCipherKey("0654813216578941");
+		AppEngineTypeAttrsModel m = AppEngineTypeAttrsModelMeta.get().jsonToModel(
+				"{" +
+				"\"blobAttr\":\"aGVsbG8=\"" +
+				",\"blobKeyAttr\":\"Q3PqkweYlb4iWpp0BVw\",\"categoryAttr\":\"partOfSpeech\"" +
+				",\"emailAttr\":\"takawitter@test.com\"" +
+				",\"encryptedTextAttr\":\"eeRXmeJQOo8HbwTHJ+R+WQ==\"" +
+				",\"geoPtAttr\":{\"latitude\":10.0,\"longitude\":10.0}" +
+				",\"imHandleAttr1\":{\"address\":\"handle\",\"protocol\":\"xmpp\"}" +
+				",\"imHandleAttr2\":{\"address\":\"network\",\"protocol\":\"http://aim.com\"}" +
+				",\"key\":\"aglzbGltMy1nZW5yCwsSBHRlc3QY6AcM\"" +
+				",\"linkAttr\":\"link\",\"phoneNumberAttr\":\"000-0000-0000\"" +
+				",\"postalAddressAttr\":\"address\",\"ratingAttr\":70" +
+				",\"shortBlobAttr\":\"aGVsbG8=\"" +
+				",\"textAttr\":\"hello\"" +
+				",\"user1\":{\"authDomain\":\"authDomain\",\"email\":\"user@test.com\"}" +
+				",\"user2\":{\"authDomain\":\"authDomain\",\"email\":\"user@test.com\",\"userId\":\"userId\"}" +
+				",\"user3\":{\"authDomain\":\"authDomain\",\"email\":\"user@test.com\",\"federatedIdentity\":\"federatedId\",\"userId\":\"userId\"}" +
+				"}"
+				);
+		Assert.assertEquals("aglzbGltMy1nZW5yCwsSBHRlc3QY6AcM", KeyFactory.keyToString(m.getKey()));
+		Assert.assertEquals("Q3PqkweYlb4iWpp0BVw", m.getBlobKeyAttr().getKeyString());
+		Assert.assertEquals("partOfSpeech", m.getCategoryAttr().getCategory());
+		Assert.assertEquals("takawitter@test.com", m.getEmailAttr().getEmail());
+		Assert.assertArrayEquals("hello".getBytes(), m.getBlobAttr().getBytes());
+		Assert.assertEquals(10, m.getGeoPtAttr().getLatitude(), 0.1);
+		Assert.assertEquals(10, m.getGeoPtAttr().getLongitude(), 0.1);
+		Assert.assertEquals("handle", m.getImHandleAttr1().getAddress());
+		Assert.assertEquals(IMHandle.Scheme.xmpp.name(), m.getImHandleAttr1().getProtocol());
+		Assert.assertEquals("network", m.getImHandleAttr2().getAddress());
+		Assert.assertEquals("http://aim.com", m.getImHandleAttr2().getProtocol());
+		Assert.assertEquals("link", m.getLinkAttr().getValue());
+		Assert.assertEquals("000-0000-0000", m.getPhoneNumberAttr().getNumber());
+		Assert.assertEquals("address", m.getPostalAddressAttr().getAddress());
+		Assert.assertEquals(70, m.getRatingAttr().getRating());
+		Assert.assertArrayEquals("hello".getBytes(), m.getShortBlobAttr().getBytes());
+		Assert.assertEquals("hello", m.getTextAttr().getValue());
+		Assert.assertEquals("hello", m.getEncryptedTextAttr().getValue());
+		Assert.assertEquals("authDomain", m.getUser1().getAuthDomain());
+		Assert.assertEquals("user@test.com", m.getUser1().getEmail());
+		Assert.assertNull(m.getUser1().getUserId());
+		Assert.assertNull(m.getUser1().getFederatedIdentity());
+		Assert.assertEquals("authDomain", m.getUser2().getAuthDomain());
+		Assert.assertEquals("user@test.com", m.getUser2().getEmail());
+		Assert.assertEquals("userId", m.getUser2().getUserId());
+		Assert.assertNull(m.getUser2().getFederatedIdentity());
+		Assert.assertEquals("authDomain", m.getUser3().getAuthDomain());
+		Assert.assertEquals("user@test.com", m.getUser3().getEmail());
+		Assert.assertEquals("userId", m.getUser3().getUserId());
+		Assert.assertEquals("federatedId", m.getUser3().getFederatedIdentity());
 	}
 
 	@Test
