@@ -82,7 +82,7 @@ public class AppEngineTypeListAttrsModelTest {
 		JSON j = new JSON();
 		j.setSuppressNull(true);
 		System.out.println(j.format(m));
-		JSON.decode(json);
+//		JSON.decode(json);
 
 		Assert.assertEquals(
 				"{\"blobKeyListAttr\":[\"lkwejl2k3jrksl\",\"kaekl23joij\"]" +
