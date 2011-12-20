@@ -44,6 +44,10 @@ public abstract class Session
 implements Serializable
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
 	 * Constructor.
 	 * @param sessionId session ID
 	 * @param factory Peer factory
