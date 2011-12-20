@@ -27,7 +27,7 @@ import org.aspectj.lang.reflect.CodeSignature;
  * Hooks method that has @Share annotation and invoke handler.handle().
  * @author Takao Nakaguchi
  */
-public aspect ShareAspect
+public abstract aspect ShareAspect
 {
 	/**
 	 * hook method execution and call hookHandler.handle()
@@ -59,4 +59,39 @@ public aspect ShareAspect
 			}
 		});
 	}
+
+	declare parents: hasmethod(@Share * *(..))  implements SharedObject;
+
+	public void SharedObject.bindToSession(Session session, String objectId){
+		if(this.session != null){
+			throw new IllegalStateException("object already binded to "
+					+ session.getSessionId() + ":" + this.objectId);
+		}
+		this.session = session;
+		this.objectId = objectId;
+	}
+
+	public void SharedObject.unbindFromSession(){
+		this.session = null;
+		this.objectId = null;
+	}
+
+	public String SharedObject.getObjectId(){
+		return objectId;
+	}
+
+	public Object SharedObject.share(Method method, Object[] args, Proceeder proceeder){
+		if(session == null){
+			return proceeder.proceed();
+		}
+		try{
+			return session.share(this, method, args, proceeder);
+		} catch(WhiteDogException e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	private Session SharedObject.session;
+	private String SharedObject.objectId;
 }
